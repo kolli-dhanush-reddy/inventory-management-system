@@ -24,6 +24,7 @@ import {
   LayoutDashboard,
   List,
   LogOut,
+  Moon,
   Package,
   Pencil,
   Plus,
@@ -35,6 +36,7 @@ import {
   ShieldAlert,
   SlidersHorizontal,
   Sparkles,
+  Sun,
   Tag,
   Trash2,
   TrendingDown,
@@ -169,6 +171,31 @@ export default function Page() {
   const [txns, setTxns] = useState<A[]>(T0)
   const [users] = useState<A[]>(USERS0)
   const [modal, setModal] = useState<A>(null)
+  const [isDark, setIsDark] = useState(false)
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('theme')
+      if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        setIsDark(true)
+        document.documentElement.classList.add('dark')
+      }
+    }
+  }, [])
+
+  const toggleDarkMode = () => {
+    setIsDark((prev) => {
+      const next = !prev
+      if (next) {
+        document.documentElement.classList.add('dark')
+        localStorage.setItem('theme', 'dark')
+      } else {
+        document.documentElement.classList.remove('dark')
+        localStorage.setItem('theme', 'light')
+      }
+      return next
+    })
+  }
 
   // Interactive Settings State
   const [currency, setCurrency] = useState('$')
@@ -559,7 +586,7 @@ export default function Page() {
   )
 
   return (
-    <div className="flex min-h-screen flex-col bg-slate-50/60 text-slate-900 font-sans">
+    <div className={`flex min-h-screen flex-col ${isDark ? 'dark bg-[#090d16] text-slate-100' : 'bg-slate-50/60 text-slate-900'} font-sans`}>
       {/* Demo Sandbox Top Header */}
       <header className="bg-slate-900 px-4 py-2 text-white text-xs flex flex-wrap items-center justify-between gap-2 border-b border-slate-800">
         <div className="flex items-center gap-2">
@@ -572,18 +599,29 @@ export default function Page() {
           {/* Command Palette Trigger */}
           <button
             onClick={() => setCmdOpen(true)}
-            className="flex items-center gap-2 rounded-lg bg-slate-800 px-2.5 py-1 text-xs text-slate-300 hover:bg-slate-700 hover:text-white transition-colors border border-slate-700"
+            className="flex items-center gap-2 rounded-lg bg-slate-800 px-2.5 py-1 text-xs text-slate-300 hover:bg-slate-700 hover:text-white transition-colors border border-slate-700 cursor-pointer"
           >
             <Search className="size-3.5" />
             <span className="hidden sm:inline">Search system...</span>
             <kbd className="rounded bg-slate-700 px-1.5 py-0.5 text-[10px] font-mono text-slate-300">⌘K</kbd>
           </button>
 
+          {/* Theme Mode Toggle Button */}
+          <button
+            onClick={toggleDarkMode}
+            aria-label="Toggle theme mode"
+            className="flex items-center gap-1.5 rounded-lg px-2 py-1 text-xs text-slate-300 hover:bg-slate-800 hover:text-white transition-colors border border-slate-700 cursor-pointer"
+            title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+          >
+            {isDark ? <Sun className="size-3.5 text-amber-400" /> : <Moon className="size-3.5 text-indigo-400" />}
+            <span className="hidden md:inline font-medium">{isDark ? 'Light' : 'Dark'}</span>
+          </button>
+
           {/* Notifications Trigger */}
           <button
             onClick={() => setNotifOpen(true)}
             aria-label="View notifications"
-            className="relative rounded-lg p-1.5 hover:bg-slate-800 text-slate-300 hover:text-white transition-colors"
+            className="relative rounded-lg p-1.5 hover:bg-slate-800 text-slate-300 hover:text-white transition-colors cursor-pointer"
           >
             <Bell className="size-4" />
             {unreadCount > 0 && (
@@ -615,8 +653,8 @@ export default function Page() {
 
       <div className="flex flex-1">
         {/* Sidebar Navigation */}
-        <aside className="hidden w-60 shrink-0 flex-col border-r border-slate-200/80 bg-white md:flex">
-          <div className="flex items-center gap-2 px-5 py-4 text-lg font-bold border-b border-slate-100">
+        <aside className={`hidden w-60 shrink-0 flex-col border-r ${isDark ? 'border-slate-800/80 bg-[#0c1220] text-slate-100' : 'border-slate-200/80 bg-white text-slate-900'} md:flex`}>
+          <div className={`flex items-center gap-2 px-5 py-4 text-lg font-bold border-b ${isDark ? 'border-slate-800/80' : 'border-slate-100'}`}>
             <div className="flex size-7 items-center justify-center rounded-lg bg-emerald-600 text-white shadow-xs">
               <Boxes className="size-4" />
             </div>
@@ -628,17 +666,25 @@ export default function Page() {
                 key={l}
                 onClick={() => setView(l)}
                 aria-label={`Navigate to ${l}`}
-                className={`flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-semibold transition-all ${view === l ? 'bg-slate-900 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`}
+                className={`flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-semibold transition-all ${
+                  view === l
+                    ? isDark
+                      ? 'bg-indigo-600 text-white shadow-sm'
+                      : 'bg-slate-900 text-white shadow-sm'
+                    : isDark
+                    ? 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                }`}
               >
                 <I className="size-4 shrink-0" />
                 {l}
               </button>
             ))}
           </nav>
-          <div className="mt-auto border-t border-slate-200/80 p-4 bg-slate-50/50">
+          <div className={`mt-auto border-t p-4 ${isDark ? 'border-slate-800/80 bg-slate-900/40' : 'border-slate-200/80 bg-slate-50/50'}`}>
             <div className="flex items-center justify-between">
               <div>
-                <p className="font-bold text-slate-900 text-xs">{admin ? 'Dana Whitfield' : 'Raj Patel'}</p>
+                <p className={`font-bold text-xs ${isDark ? 'text-white' : 'text-slate-900'}`}>{admin ? 'Dana Whitfield' : 'Raj Patel'}</p>
                 <Badge variant="outline" className="text-[10px] py-0 font-medium">{admin ? 'Admin' : 'Staff'}</Badge>
               </div>
               <LogOut className="size-4 text-slate-400" />
@@ -647,7 +693,7 @@ export default function Page() {
         </aside>
 
         {/* Main Content Area */}
-        <main className="min-w-0 flex-1 p-4 md:p-6 bg-slate-50/60">
+        <main className={`min-w-0 flex-1 p-4 md:p-6 ${isDark ? 'bg-[#090d16]' : 'bg-slate-50/60'}`}>
           {/* Mobile Touch Navigation */}
           <div className="mb-4 border-b border-slate-200/80 pb-3 md:hidden">
             <div className="flex items-center justify-between mb-3">
