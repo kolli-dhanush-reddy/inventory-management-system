@@ -48,11 +48,13 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import InventoryStockDashboard from '@/components/inventory-stock-dashboard'
 
 type A = any
 
 const NAV: [string, A][] = [
   ['Dashboard', LayoutDashboard],
+  ['Live Telemetry Hub', Sparkles],
   ['Products', Package],
   ['Inventory Operations', ClipboardList],
   ['Suppliers', Truck],
@@ -680,7 +682,10 @@ export default function Page() {
 
           {/* ---------------- DASHBOARD VIEW ---------------- */}
           {view === 'Dashboard' && (
-            <div className="grid gap-5">
+            <div className="grid gap-6">
+              {/* Live Telemetry Operations Widget */}
+              <InventoryStockDashboard />
+
               {/* KPI Cards */}
               <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">
                 <Kpi t="Total Products" v={prods.length} i={Package} trendStr="+2 this week" />
@@ -763,6 +768,13 @@ export default function Page() {
                   <CardContent className="overflow-x-auto"><Table><TH cols={['Date', 'Type', 'Product', 'Qty', 'Ref / Note', 'By']} /><TableBody className="divide-y divide-slate-100">{txns.slice(0, 7).map(TxRow)}</TableBody></Table></CardContent>
                 </Card>
               </div>
+            </div>
+          )}
+
+          {/* ---------------- LIVE TELEMETRY HUB VIEW ---------------- */}
+          {view === 'Live Telemetry Hub' && (
+            <div className="py-2">
+              <InventoryStockDashboard />
             </div>
           )}
 
