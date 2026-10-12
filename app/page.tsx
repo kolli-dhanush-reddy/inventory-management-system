@@ -50,13 +50,11 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import InventoryStockDashboard from '@/components/inventory-stock-dashboard'
 
 type A = any
 
 const NAV: [string, A][] = [
   ['Dashboard', LayoutDashboard],
-  ['Live Telemetry Hub', Sparkles],
   ['Products', Package],
   ['Inventory Operations', ClipboardList],
   ['Suppliers', Truck],
@@ -118,20 +116,20 @@ const T0: A[] = Array.from({ length: 36 }, (_, i) => {
 
 const status = (p: A) => (p.qty === 0 ? 'Out of Stock' : p.qty <= p.min ? 'Low Stock' : 'In Stock')
 const SC: Record<string, string> = {
-  'Out of Stock': 'bg-red-100 text-red-950 border-red-300 font-semibold',
-  'Low Stock': 'bg-amber-100 text-amber-950 border-amber-300 font-semibold',
-  'In Stock': 'bg-emerald-100 text-emerald-950 border-emerald-300 font-semibold',
+  'Out of Stock': 'bg-rose-500/15 text-rose-600 dark:text-rose-400 border-rose-500/30 font-semibold',
+  'Low Stock': 'bg-amber-500/15 text-amber-600 dark:text-amber-400 border-amber-500/30 font-semibold',
+  'In Stock': 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 font-semibold',
 }
 const TC: Record<string, string> = {
-  'Stock In': 'bg-emerald-100 text-emerald-800 font-semibold',
-  'Stock Out': 'bg-rose-100 text-rose-800 font-semibold',
-  Adjustment: 'bg-sky-100 text-sky-800 font-semibold',
+  'Stock In': 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 font-semibold',
+  'Stock Out': 'bg-rose-500/15 text-rose-600 dark:text-rose-400 border-rose-500/30 font-semibold',
+  Adjustment: 'bg-sky-500/15 text-sky-600 dark:text-sky-400 border-sky-500/30 font-semibold',
 }
 
-const inp = 'h-9 w-full rounded-md border border-slate-300 bg-white px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-slate-900 focus-visible:ring-offset-1 disabled:opacity-50 transition-all'
+const inp = 'h-9 w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 px-3 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-600 outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-1 dark:focus-visible:ring-offset-slate-900 disabled:opacity-50 transition-all'
 
 function Field({ label, children }: A) {
-  return <label className="grid gap-1 text-xs font-semibold text-slate-700">{label}{children}</label>
+  return <label className="grid gap-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300">{label}{children}</label>
 }
 
 function Modal({ title, onClose, isDirty = false, children }: A) {
@@ -140,11 +138,11 @@ function Modal({ title, onClose, isDirty = false, children }: A) {
     onClose()
   }
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 p-4 backdrop-blur-xs animate-in fade-in" onClick={handleClose}>
-      <div className="max-h-[90vh] w-full max-w-lg overflow-auto rounded-xl bg-white p-6 shadow-2xl border border-slate-200" onClick={(e) => e.stopPropagation()}>
-        <div className="mb-4 flex items-center justify-between border-b border-slate-100 pb-3">
-          <h3 className="font-bold text-slate-900 text-base flex items-center gap-2">{title}</h3>
-          <button onClick={handleClose} aria-label="Close dialog" className="rounded-lg p-1.5 hover:bg-slate-100 text-slate-500 focus-visible:ring-2 focus-visible:ring-slate-900 transition-colors">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 dark:bg-black/75 p-4 backdrop-blur-sm animate-in fade-in" onClick={handleClose}>
+      <div className="max-h-[90vh] w-full max-w-lg overflow-auto rounded-2xl bg-white dark:bg-[#0F172A] p-6 shadow-2xl border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100" onClick={(e) => e.stopPropagation()}>
+        <div className="mb-4 flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+          <h3 className="font-bold text-slate-900 dark:text-white text-base flex items-center gap-2">{title}</h3>
+          <button onClick={handleClose} aria-label="Close dialog" className="rounded-lg p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-700 dark:hover:text-white focus-visible:ring-2 focus-visible:ring-indigo-500 transition-colors cursor-pointer">
             <X className="size-4" />
           </button>
         </div>
@@ -156,7 +154,7 @@ function Modal({ title, onClose, isDirty = false, children }: A) {
 
 const Sb = ({ s }: { s: string }) => (
   <Badge variant="outline" className={`gap-1.5 px-2 py-0.5 ${SC[s]}`}>
-    <span className={`size-1.5 rounded-full ${s === 'In Stock' ? 'bg-emerald-600' : s === 'Low Stock' ? 'bg-amber-600 animate-pulse' : 'bg-red-600 animate-pulse'}`} />
+    <span className={`size-1.5 rounded-full ${s === 'In Stock' ? 'bg-emerald-500' : s === 'Low Stock' ? 'bg-amber-500 animate-pulse' : 'bg-rose-500 animate-pulse'}`} />
     {s}
   </Badge>
 )
@@ -171,12 +169,15 @@ export default function Page() {
   const [txns, setTxns] = useState<A[]>(T0)
   const [users] = useState<A[]>(USERS0)
   const [modal, setModal] = useState<A>(null)
-  const [isDark, setIsDark] = useState(false)
+  const [isDark, setIsDark] = useState(true)
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('theme')
-      if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      if (saved === 'light') {
+        setIsDark(false)
+        document.documentElement.classList.remove('dark')
+      } else {
         setIsDark(true)
         document.documentElement.classList.add('dark')
       }
@@ -537,26 +538,26 @@ export default function Page() {
     )
   }
 
-  const Kpi = ({ t, v, i: I, c = '', bg = 'bg-white dark:bg-zinc-900', trendStr }: A) => (
-    <Card className={`${bg} border border-slate-200/80 rounded-xl shadow-[0_2px_8px_-3px_rgba(0,0,0,0.05)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md`}>
+  const Kpi = ({ t, v, i: I, c = '', bg, trendStr }: A) => (
+    <Card className={`${bg || 'bg-white dark:bg-slate-900/70 border-slate-200/80 dark:border-slate-800/80'} rounded-2xl shadow-[0_2px_8px_-3px_rgba(0,0,0,0.05)] dark:shadow-black/30 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md`}>
       <CardContent className="p-4">
         <div className="flex items-center justify-between">
-          <p className="text-xs font-semibold text-slate-500">{t}</p>
-          <div className="rounded-lg bg-slate-100 p-2 text-slate-700">
+          <p className="text-xs font-semibold text-slate-500 dark:text-slate-400">{t}</p>
+          <div className="rounded-xl bg-slate-100 dark:bg-slate-800 p-2 text-slate-700 dark:text-slate-300">
             <I className="size-4" />
           </div>
         </div>
-        <p className={`mt-2 text-2xl font-bold tracking-tight ${c}`}>{v}</p>
-        {trendStr && <p className="mt-1 text-[11px] font-medium text-emerald-600 flex items-center gap-1"><TrendingUp className="size-3" />{trendStr}</p>}
+        <p className={`mt-2 text-2xl font-bold tracking-tight text-slate-900 dark:text-white ${c}`}>{v}</p>
+        {trendStr && <p className="mt-1 text-[11px] font-medium text-emerald-600 dark:text-emerald-400 flex items-center gap-1"><TrendingUp className="size-3" />{trendStr}</p>}
       </CardContent>
     </Card>
   )
 
   const TH = ({ cols }: { cols: string[] }) => (
     <TableHeader>
-      <TableRow className="bg-slate-50/80 hover:bg-slate-50/80 border-b border-slate-200/80">
+      <TableRow className="bg-slate-50/80 dark:bg-slate-900/80 hover:bg-slate-50/80 dark:hover:bg-slate-900/80 border-b border-slate-200/80 dark:border-slate-800/80">
         {cols.map((c) => (
-          <TableHead key={c} className="font-semibold text-slate-700 text-xs py-3">
+          <TableHead key={c} className="font-semibold text-slate-700 dark:text-slate-300 text-xs py-3">
             {c}
           </TableHead>
         ))}
@@ -572,16 +573,16 @@ export default function Page() {
   )
 
   const TxRow = (t: A) => (
-    <TableRow key={t.id} className="hover:bg-slate-50/60 transition-colors">
-      <TableCell className="whitespace-nowrap text-slate-500 text-xs font-mono">{t.at}</TableCell>
+    <TableRow key={t.id} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/50 transition-colors">
+      <TableCell className="whitespace-nowrap text-slate-500 dark:text-slate-400 text-xs font-mono">{t.at}</TableCell>
       <TableCell><Badge className={TC[t.type]}>{t.type}</Badge></TableCell>
-      <TableCell className="font-medium text-slate-900">{pname(t.pid)?.sku} · {pname(t.pid)?.name}</TableCell>
-      <TableCell className="font-semibold">{t.qty > 0 && t.type === 'Adjustment' ? '+' : t.type === 'Stock Out' ? '−' : ''}{Math.abs(t.qty)}</TableCell>
-      <TableCell className="text-slate-700 text-xs">
+      <TableCell className="font-medium text-slate-900 dark:text-white">{pname(t.pid)?.sku} · {pname(t.pid)?.name}</TableCell>
+      <TableCell className="font-semibold text-slate-900 dark:text-white">{t.qty > 0 && t.type === 'Adjustment' ? '+' : t.type === 'Stock Out' ? '−' : ''}{Math.abs(t.qty)}</TableCell>
+      <TableCell className="text-slate-700 dark:text-slate-300 text-xs">
         <span className="font-medium">{t.ref || '—'}</span>
-        {t.note && <span className="block text-[11px] text-slate-500 font-normal italic">{t.note}</span>}
+        {t.note && <span className="block text-[11px] text-slate-500 dark:text-slate-400 font-normal italic">{t.note}</span>}
       </TableCell>
-      <TableCell className="text-slate-600">{t.by}</TableCell>
+      <TableCell className="text-slate-600 dark:text-slate-400">{t.by}</TableCell>
     </TableRow>
   )
 
@@ -610,11 +611,11 @@ export default function Page() {
           <button
             onClick={toggleDarkMode}
             aria-label="Toggle theme mode"
-            className="flex items-center gap-1.5 rounded-lg px-2 py-1 text-xs text-slate-300 hover:bg-slate-800 hover:text-white transition-colors border border-slate-700 cursor-pointer"
-            title={isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            className="flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs text-slate-200 hover:bg-slate-800 hover:text-white transition-colors border border-slate-700 cursor-pointer bg-slate-800/80 shadow-xs"
+            title={isDark ? 'Switch to Option B: Light Mode' : 'Switch to Option A: Dark Mode (Default)'}
           >
             {isDark ? <Sun className="size-3.5 text-amber-400" /> : <Moon className="size-3.5 text-indigo-400" />}
-            <span className="hidden md:inline font-medium">{isDark ? 'Light' : 'Dark'}</span>
+            <span className="font-semibold">{isDark ? 'Option B: Light' : 'Option A: Dark'}</span>
           </button>
 
           {/* Notifications Trigger */}
@@ -695,9 +696,9 @@ export default function Page() {
         {/* Main Content Area */}
         <main className={`min-w-0 flex-1 p-4 md:p-6 ${isDark ? 'bg-[#090d16]' : 'bg-slate-50/60'}`}>
           {/* Mobile Touch Navigation */}
-          <div className="mb-4 border-b border-slate-200/80 pb-3 md:hidden">
+          <div className="mb-4 border-b border-slate-200/80 dark:border-slate-800/80 pb-3 md:hidden">
             <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-2 text-base font-bold"><Boxes className="size-5 text-emerald-600" />Stockly</div>
+              <div className="flex items-center gap-2 text-base font-bold text-slate-900 dark:text-white"><Boxes className="size-5 text-emerald-600" />Stockly</div>
               <Badge variant="outline" className="text-[10px]">{admin ? 'Admin' : 'Staff'}</Badge>
             </div>
             <div className="flex overflow-x-auto gap-1.5 pb-1 no-scrollbar">
@@ -705,7 +706,15 @@ export default function Page() {
                 <button
                   key={l}
                   onClick={() => setView(l)}
-                  className={`flex items-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-2 text-xs font-semibold transition-colors ${view === l ? 'bg-slate-900 text-white shadow-xs' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
+                  className={`flex items-center gap-1.5 whitespace-nowrap rounded-lg px-3 py-2 text-xs font-semibold transition-colors ${
+                    view === l
+                      ? isDark
+                        ? 'bg-indigo-600 text-white shadow-xs'
+                        : 'bg-slate-900 text-white shadow-xs'
+                      : isDark
+                      ? 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                      : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                  }`}
                 >
                   <I className="size-3.5" />
                   {l}
@@ -716,62 +725,64 @@ export default function Page() {
 
           <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
             <div>
-              <h1 className="text-2xl font-bold tracking-tight text-slate-900">{view}</h1>
-              <p className="text-xs text-slate-500">Real-time Stock Maintaining & Inventory Management System</p>
+              <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">{view}</h1>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Real-time Stock Maintaining & Inventory Management System</p>
             </div>
 
             {/* Quick Command Trigger Badge */}
-            <button onClick={() => setCmdOpen(true)} className="hidden lg:flex items-center gap-2 text-xs font-medium text-slate-500 hover:text-slate-900 bg-white border border-slate-200 rounded-lg px-3 py-1.5 shadow-2xs hover:shadow-xs transition-all">
-              <Sparkles className="size-3.5 text-amber-500" /> Quick Search & Actions <kbd className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-mono text-slate-600">⌘K</kbd>
+            <button
+              onClick={() => setCmdOpen(true)}
+              className="hidden lg:flex items-center gap-2 text-xs font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-1.5 shadow-xs hover:shadow-sm transition-all cursor-pointer"
+            >
+              <Sparkles className="size-3.5 text-indigo-500 dark:text-indigo-400" />
+              <span>Quick Search & Actions</span>
+              <kbd className="rounded bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 text-[10px] font-mono text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700">⌘K</kbd>
             </button>
           </div>
 
           {/* ---------------- DASHBOARD VIEW ---------------- */}
           {view === 'Dashboard' && (
-            <div className="grid gap-6">
-              {/* Live Telemetry Operations Widget */}
-              <InventoryStockDashboard />
-
+            <div className="grid gap-5">
               {/* KPI Cards */}
               <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">
                 <Kpi t="Total Products" v={prods.length} i={Package} trendStr="+2 this week" />
                 <Kpi t="Total Stock Items" v={items.toLocaleString()} i={Boxes} trendStr="+140 incoming" />
-                <Kpi t="Low Stock Warnings" v={low.length} i={AlertTriangle} c="text-amber-700" bg={low.length > 0 ? 'bg-amber-50/40 border border-amber-200/80 rounded-xl shadow-[0_2px_8px_-3px_rgba(0,0,0,0.05)]' : 'bg-white dark:bg-zinc-900 border border-slate-200/80 rounded-xl shadow-[0_2px_8px_-3px_rgba(0,0,0,0.05)]'} />
-                <Kpi t="Out of Stock Emergencies" v={out.length} i={AlertCircle} c="text-red-700" bg={out.length > 0 ? 'bg-red-50/40 border border-red-200/60 rounded-xl shadow-[0_2px_8px_-3px_rgba(0,0,0,0.05)]' : 'bg-white dark:bg-zinc-900 border border-slate-200/80 rounded-xl shadow-[0_2px_8px_-3px_rgba(0,0,0,0.05)]'} />
+                <Kpi t="Low Stock Warnings" v={low.length} i={AlertTriangle} c="text-amber-600 dark:text-amber-400" bg={low.length > 0 ? 'bg-amber-500/10 border-amber-500/30' : undefined} />
+                <Kpi t="Out of Stock Emergencies" v={out.length} i={AlertCircle} c="text-rose-600 dark:text-rose-400" bg={out.length > 0 ? 'bg-rose-500/10 border-rose-500/30' : undefined} />
                 <Kpi t="Total Inventory Value" v={$(value)} i={DollarSign} trendStr="+4.2% capital valuation" />
               </div>
 
               {/* Quick Movement Actions */}
-              <Card className="border border-slate-200/80 bg-white dark:bg-zinc-900 rounded-xl shadow-[0_2px_8px_-3px_rgba(0,0,0,0.05)]">
+              <Card className="border border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-slate-900/70 shadow-xs">
                 <CardContent className="flex flex-wrap items-center justify-between gap-3 p-4">
                   <div className="flex items-center gap-2">
-                    <SlidersHorizontal className="size-4 text-slate-500" />
-                    <span className="text-xs font-bold text-slate-800">Quick Operations Dock:</span>
+                    <SlidersHorizontal className="size-4 text-slate-500 dark:text-slate-400" />
+                    <span className="text-xs font-bold text-slate-800 dark:text-slate-200">Quick Operations Dock:</span>
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    <Button size="sm" onClick={() => setModal({ k: 'product' })} className="gap-1.5"><Plus className="size-4" />Add Product</Button>
-                    <Button size="sm" variant="outline" className="bg-emerald-50 text-emerald-900 border-emerald-300 hover:bg-emerald-100 gap-1.5" onClick={() => openQuickAction(prods[0], 'Stock In')}><ArrowDownToLine className="size-4 text-emerald-700" />Stock In</Button>
-                    <Button size="sm" variant="outline" className="bg-rose-50 text-rose-900 border-rose-300 hover:bg-rose-100 gap-1.5" onClick={() => openQuickAction(prods[0], 'Stock Out')}><ArrowUpFromLine className="size-4 text-rose-700" />Stock Out</Button>
-                    <Button size="sm" variant="outline" className="bg-sky-50 text-sky-900 border-sky-300 hover:bg-sky-100 gap-1.5" onClick={() => openQuickAction(prods[0], 'Adjustment')}><SlidersHorizontal className="size-4 text-sky-700" />Stock Adjustment</Button>
-                    <Button size="sm" variant="secondary" className="bg-slate-900 text-white hover:bg-slate-800 gap-1.5" onClick={() => setBulkModal(true)}><Truck className="size-4" />Bulk Receive PO</Button>
+                    <Button size="sm" onClick={() => setModal({ k: 'product' })} className="gap-1.5 bg-indigo-600 hover:bg-indigo-500 text-white shadow-xs cursor-pointer"><Plus className="size-4" />Add Product</Button>
+                    <Button size="sm" variant="outline" className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/20 gap-1.5 cursor-pointer" onClick={() => openQuickAction(prods[0], 'Stock In')}><ArrowDownToLine className="size-4 text-emerald-600 dark:text-emerald-400" />Stock In</Button>
+                    <Button size="sm" variant="outline" className="bg-rose-500/10 text-rose-700 dark:text-rose-400 border-rose-500/30 hover:bg-rose-500/20 gap-1.5 cursor-pointer" onClick={() => openQuickAction(prods[0], 'Stock Out')}><ArrowUpFromLine className="size-4 text-rose-600 dark:text-rose-400" />Stock Out</Button>
+                    <Button size="sm" variant="outline" className="bg-sky-500/10 text-sky-700 dark:text-sky-400 border-sky-500/30 hover:bg-sky-500/20 gap-1.5 cursor-pointer" onClick={() => openQuickAction(prods[0], 'Adjustment')}><SlidersHorizontal className="size-4 text-sky-600 dark:text-sky-400" />Stock Adjustment</Button>
+                    <Button size="sm" variant="secondary" className="bg-slate-800 dark:bg-slate-800 text-slate-200 hover:bg-slate-700 dark:hover:bg-slate-700 border border-slate-700/80 gap-1.5 cursor-pointer" onClick={() => setBulkModal(true)}><Truck className="size-4" />Bulk Receive PO</Button>
                   </div>
                 </CardContent>
               </Card>
 
               {/* Emergency Out-of-Stock Alert Banner */}
               {out.length > 0 && (
-                <Card className="border border-red-200/60 bg-red-50/40 rounded-xl shadow-[0_2px_8px_-3px_rgba(0,0,0,0.05)] animate-in fade-in">
-                  <CardHeader className="pb-2"><CardTitle className="text-sm font-bold text-red-700 flex items-center gap-2"><AlertCircle className="size-4 text-red-600 animate-pulse" />CRITICAL: Out of Stock Emergencies ({out.length} items)</CardTitle></CardHeader>
+                <Card className="border border-rose-500/30 bg-rose-500/10 rounded-2xl shadow-xs animate-in fade-in">
+                  <CardHeader className="pb-2"><CardTitle className="text-sm font-bold text-rose-600 dark:text-rose-400 flex items-center gap-2"><AlertCircle className="size-4 text-rose-500 animate-pulse" />CRITICAL: Out of Stock Emergencies ({out.length} items)</CardTitle></CardHeader>
                   <CardContent className="overflow-x-auto p-4 pt-0">
                     <Table><TH cols={['Product', 'SKU', 'Category', 'Min Threshold', 'Action']} />
-                      <TableBody className="divide-y divide-slate-100">
+                      <TableBody className="divide-y divide-slate-100 dark:divide-slate-800/60">
                         {out.map((p) => (
-                          <TableRow key={p.id} className="bg-white/80 hover:bg-white transition-colors">
-                            <TableCell className="font-bold text-red-700">{p.name}</TableCell>
-                            <TableCell className="font-mono text-xs text-slate-600">{p.sku}</TableCell>
-                            <TableCell>{p.cat}</TableCell>
-                            <TableCell>{p.min} units</TableCell>
-                            <TableCell><Button size="sm" className="bg-red-700 hover:bg-red-800 text-white shadow-2xs" onClick={() => openQuickAction(p, 'Stock In')}>Receive Stock Now</Button></TableCell>
+                          <TableRow key={p.id} className="hover:bg-rose-500/10 transition-colors">
+                            <TableCell className="font-bold text-rose-700 dark:text-rose-300">{p.name}</TableCell>
+                            <TableCell className="font-mono text-xs text-slate-600 dark:text-slate-400">{p.sku}</TableCell>
+                            <TableCell className="text-slate-700 dark:text-slate-300">{p.cat}</TableCell>
+                            <TableCell className="text-slate-700 dark:text-slate-300">{p.min} units</TableCell>
+                            <TableCell><Button size="sm" className="bg-rose-600 hover:bg-rose-500 text-white shadow-2xs cursor-pointer" onClick={() => openQuickAction(p, 'Stock In')}>Receive Stock Now</Button></TableCell>
                           </TableRow>
                         ))}
                       </TableBody>
@@ -782,25 +793,53 @@ export default function Page() {
 
               {/* Visual Charts */}
               <div className="grid gap-4 lg:grid-cols-2">
-                <Card className="border border-slate-200/80 bg-white dark:bg-zinc-900 rounded-xl shadow-[0_2px_8px_-3px_rgba(0,0,0,0.05)]"><CardHeader><CardTitle className="text-sm font-bold text-slate-900">Stock Level by Category (Units)</CardTitle></CardHeader><CardContent className="h-64"><ResponsiveContainer><BarChart data={byCat}><CartesianGrid strokeDasharray="3 3" vertical={false} /><XAxis dataKey="name" fontSize={12} /><YAxis fontSize={12} /><Tooltip /><Bar dataKey="stock" fill="#0f172a" radius={[4, 4, 0, 0]} /></BarChart></ResponsiveContainer></CardContent></Card>
-                <Card className="border border-slate-200/80 bg-white dark:bg-zinc-900 rounded-xl shadow-[0_2px_8px_-3px_rgba(0,0,0,0.05)]"><CardHeader><CardTitle className="text-sm font-bold text-slate-900">Transactions Trend (Units, Last 7 Days)</CardTitle></CardHeader><CardContent className="h-64"><ResponsiveContainer><LineChart data={trend}><CartesianGrid strokeDasharray="3 3" vertical={false} /><XAxis dataKey="day" fontSize={12} /><YAxis fontSize={12} /><Tooltip /><Line dataKey="In" stroke="#059669" strokeWidth={2.5} name="Stock In" /><Line dataKey="Out" stroke="#e11d48" strokeWidth={2.5} name="Stock Out" /></LineChart></ResponsiveContainer></CardContent></Card>
+                <Card className="border border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-slate-900/70 rounded-2xl shadow-xs">
+                  <CardHeader><CardTitle className="text-sm font-bold text-slate-900 dark:text-white">Stock Level by Category (Units)</CardTitle></CardHeader>
+                  <CardContent className="h-64">
+                    <ResponsiveContainer>
+                      <BarChart data={byCat}>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={isDark ? '#1e293b' : '#e2e8f0'} />
+                        <XAxis dataKey="name" fontSize={12} stroke={isDark ? '#94a3b8' : '#64748b'} />
+                        <YAxis fontSize={12} stroke={isDark ? '#94a3b8' : '#64748b'} />
+                        <Tooltip contentStyle={{ backgroundColor: isDark ? '#0f172a' : '#ffffff', borderColor: isDark ? '#334155' : '#e2e8f0', borderRadius: '12px', color: isDark ? '#ffffff' : '#0f172a' }} />
+                        <Bar dataKey="stock" fill={isDark ? '#6366f1' : '#0f172a'} radius={[6, 6, 0, 0]} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </CardContent>
+                </Card>
+
+                <Card className="border border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-slate-900/70 rounded-2xl shadow-xs">
+                  <CardHeader><CardTitle className="text-sm font-bold text-slate-900 dark:text-white">Transactions Trend (Units, Last 7 Days)</CardTitle></CardHeader>
+                  <CardContent className="h-64">
+                    <ResponsiveContainer>
+                      <LineChart data={trend}>
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={isDark ? '#1e293b' : '#e2e8f0'} />
+                        <XAxis dataKey="day" fontSize={12} stroke={isDark ? '#94a3b8' : '#64748b'} />
+                        <YAxis fontSize={12} stroke={isDark ? '#94a3b8' : '#64748b'} />
+                        <Tooltip contentStyle={{ backgroundColor: isDark ? '#0f172a' : '#ffffff', borderColor: isDark ? '#334155' : '#e2e8f0', borderRadius: '12px', color: isDark ? '#ffffff' : '#0f172a' }} />
+                        <Line dataKey="In" stroke="#10b981" strokeWidth={2.5} name="Stock In" />
+                        <Line dataKey="Out" stroke="#f43f5e" strokeWidth={2.5} name="Stock Out" />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </CardContent>
+                </Card>
               </div>
 
               {/* Tables: Low Stock & Recent Transactions */}
               <div className="grid gap-4 lg:grid-cols-2">
-                <Card className="border border-slate-200/80 bg-white dark:bg-zinc-900 rounded-xl shadow-[0_2px_8px_-3px_rgba(0,0,0,0.05)]">
-                  <CardHeader><CardTitle className="text-sm font-bold flex items-center justify-between text-slate-900">Low Stock Reorder Warnings <Badge variant="outline" className="bg-amber-100 text-amber-900 border-amber-300 font-semibold">{low.length} Items</Badge></CardTitle></CardHeader>
+                <Card className="border border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-slate-900/70 rounded-2xl shadow-xs">
+                  <CardHeader><CardTitle className="text-sm font-bold flex items-center justify-between text-slate-900 dark:text-white">Low Stock Reorder Warnings <Badge variant="outline" className="bg-amber-500/15 text-amber-600 dark:text-amber-400 border-amber-500/30 font-semibold">{low.length} Items</Badge></CardTitle></CardHeader>
                   <CardContent className="overflow-x-auto">
-                    {low.length === 0 ? <p className="p-4 text-xs text-slate-500">All products have sufficient stock levels.</p> : (
+                    {low.length === 0 ? <p className="p-4 text-xs text-slate-500 dark:text-slate-400">All products have sufficient stock levels.</p> : (
                       <Table><TH cols={['Product', 'Min', 'Current', 'Suggested Order', 'Action']} />
-                        <TableBody className="divide-y divide-slate-100">
+                        <TableBody className="divide-y divide-slate-100 dark:divide-slate-800/60">
                           {low.map((p) => (
                             <TableRow key={p.id}>
-                              <TableCell className="font-medium text-slate-900">{p.name}</TableCell>
-                              <TableCell>{p.min}</TableCell>
+                              <TableCell className="font-medium text-slate-900 dark:text-slate-100">{p.name}</TableCell>
+                              <TableCell className="text-slate-700 dark:text-slate-300">{p.min}</TableCell>
                               <TableCell><Badge variant="outline" className={SC[status(p)]}>{p.qty}</Badge></TableCell>
-                              <TableCell className="font-bold text-emerald-900">+{Math.max(1, p.min * reorderMult - p.qty)}</TableCell>
-                              <TableCell><Button size="sm" variant="outline" className="border-amber-300 bg-amber-50 text-amber-950 hover:bg-amber-100 font-semibold" onClick={() => openQuickAction(p, 'Stock In')}>Reorder</Button></TableCell>
+                              <TableCell className="font-bold text-emerald-600 dark:text-emerald-400">+{Math.max(1, p.min * reorderMult - p.qty)}</TableCell>
+                              <TableCell><Button size="sm" variant="outline" className="border-amber-500/30 bg-amber-500/10 text-amber-700 dark:text-amber-300 hover:bg-amber-500/20 font-semibold cursor-pointer" onClick={() => openQuickAction(p, 'Stock In')}>Reorder</Button></TableCell>
                             </TableRow>
                           ))}
                         </TableBody>
@@ -809,44 +848,37 @@ export default function Page() {
                   </CardContent>
                 </Card>
 
-                <Card className="border border-slate-200/80 bg-white dark:bg-zinc-900 rounded-xl shadow-[0_2px_8px_-3px_rgba(0,0,0,0.05)]">
-                  <CardHeader><CardTitle className="text-sm font-bold text-slate-900">Recent Transactions Feed</CardTitle></CardHeader>
-                  <CardContent className="overflow-x-auto"><Table><TH cols={['Date', 'Type', 'Product', 'Qty', 'Ref / Note', 'By']} /><TableBody className="divide-y divide-slate-100">{txns.slice(0, 7).map(TxRow)}</TableBody></Table></CardContent>
+                <Card className="border border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-slate-900/70 rounded-2xl shadow-xs">
+                  <CardHeader><CardTitle className="text-sm font-bold text-slate-900 dark:text-white">Recent Transactions Feed</CardTitle></CardHeader>
+                  <CardContent className="overflow-x-auto"><Table><TH cols={['Date', 'Type', 'Product', 'Qty', 'Ref / Note', 'By']} /><TableBody className="divide-y divide-slate-100 dark:divide-slate-800/60">{txns.slice(0, 7).map(TxRow)}</TableBody></Table></CardContent>
                 </Card>
               </div>
             </div>
           )}
 
-          {/* ---------------- LIVE TELEMETRY HUB VIEW ---------------- */}
-          {view === 'Live Telemetry Hub' && (
-            <div className="py-2">
-              <InventoryStockDashboard />
-            </div>
-          )}
-
           {/* ---------------- PRODUCTS VIEW ---------------- */}
           {view === 'Products' && (
-            <Card className="border-slate-200"><CardContent className="grid gap-4 p-4">
+            <Card className="border border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-slate-900/70"><CardContent className="grid gap-4 p-4">
               {/* Sub-nav switch & View Mode Toggle */}
-              <div className="flex flex-wrap items-center justify-between border-b border-slate-200 pb-3 gap-2">
-                <div className="flex gap-1 bg-slate-100 p-1 rounded-lg">
-                  <button onClick={() => setPtab('Products')} className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all ${ptab === 'Products' ? 'bg-white text-slate-900 shadow-2xs' : 'text-slate-600 hover:text-slate-900'}`}>Products Directory ({prods.length})</button>
-                  <button onClick={() => setPtab('Categories')} className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all ${ptab === 'Categories' ? 'bg-white text-slate-900 shadow-2xs' : 'text-slate-600 hover:text-slate-900'}`}>Categories ({cats.length})</button>
+              <div className="flex flex-wrap items-center justify-between border-b border-slate-200/80 dark:border-slate-800/80 pb-3 gap-2">
+                <div className="flex gap-1 bg-slate-100 dark:bg-slate-800/80 p-1 rounded-xl border border-slate-200/60 dark:border-slate-700/60">
+                  <button onClick={() => setPtab('Products')} className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${ptab === 'Products' ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-2xs' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}>Products Directory ({prods.length})</button>
+                  <button onClick={() => setPtab('Categories')} className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer ${ptab === 'Categories' ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-2xs' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}>Categories ({cats.length})</button>
                 </div>
 
                 {ptab === 'Products' && (
-                  <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-lg">
+                  <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800/80 p-1 rounded-xl border border-slate-200/60 dark:border-slate-700/60">
                     <button
                       onClick={() => setViewMode('table')}
                       title="Dense Table View"
-                      className={`p-1.5 rounded-md text-xs transition-all ${viewMode === 'table' ? 'bg-white text-slate-900 shadow-2xs' : 'text-slate-500 hover:text-slate-900'}`}
+                      className={`p-1.5 rounded-lg text-xs transition-all cursor-pointer ${viewMode === 'table' ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-2xs' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
                     >
                       <List className="size-4" />
                     </button>
                     <button
                       onClick={() => setViewMode('grid')}
                       title="Visual Cards View"
-                      className={`p-1.5 rounded-md text-xs transition-all ${viewMode === 'grid' ? 'bg-white text-slate-900 shadow-2xs' : 'text-slate-500 hover:text-slate-900'}`}
+                      className={`p-1.5 rounded-lg text-xs transition-all cursor-pointer ${viewMode === 'grid' ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-2xs' : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'}`}
                     >
                       <Grid className="size-4" />
                     </button>
@@ -879,10 +911,10 @@ export default function Page() {
 
                   {/* Empty Search & Filter State */}
                   {filtered.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-slate-300 py-12 text-center bg-slate-50/50">
+                    <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-slate-300 dark:border-slate-800 py-12 text-center bg-slate-50/50 dark:bg-slate-900/40">
                       <Search className="size-8 text-slate-400 mb-2" />
-                      <h3 className="font-semibold text-slate-900">No matching products found</h3>
-                      <p className="text-xs text-slate-500 mt-1 max-w-sm">No inventory items match your current filter settings.</p>
+                      <h3 className="font-semibold text-slate-900 dark:text-white">No matching products found</h3>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-sm">No inventory items match your current filter settings.</p>
                       <Button size="sm" variant="outline" className="mt-4" onClick={() => { setQ(''); setFc(''); setFs(''); setPg(0) }}>Clear Filters</Button>
                     </div>
                   ) : viewMode === 'table' ? (
@@ -890,7 +922,7 @@ export default function Page() {
                     <div className="overflow-x-auto">
                       <Table>
                         <TableHeader>
-                          <TableRow className="bg-slate-50/80">
+                          <TableRow className="bg-slate-50/80 dark:bg-slate-900/80 border-b border-slate-200/80 dark:border-slate-800/80">
                             <TableHead className="w-10">
                               <input
                                 type="checkbox"
@@ -903,31 +935,31 @@ export default function Page() {
                                 className="rounded text-slate-900 focus:ring-slate-900 cursor-pointer"
                               />
                             </TableHead>
-                            <TableHead className="font-bold text-slate-800 text-xs cursor-pointer hover:bg-slate-100" onClick={() => toggleSort('sku')}>
+                            <TableHead className="font-bold text-slate-800 dark:text-slate-200 text-xs cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800" onClick={() => toggleSort('sku')}>
                               SKU {sortField === 'sku' ? (sortAsc ? '↑' : '↓') : '↕'}
                             </TableHead>
                             <TableHead></TableHead>
-                            <TableHead className="font-bold text-slate-800 text-xs cursor-pointer hover:bg-slate-100" onClick={() => toggleSort('name')}>
+                            <TableHead className="font-bold text-slate-800 dark:text-slate-200 text-xs cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800" onClick={() => toggleSort('name')}>
                               Name {sortField === 'name' ? (sortAsc ? '↑' : '↓') : '↕'}
                             </TableHead>
-                            <TableHead className="font-bold text-slate-800 text-xs cursor-pointer hover:bg-slate-100" onClick={() => toggleSort('cat')}>
+                            <TableHead className="font-bold text-slate-800 dark:text-slate-200 text-xs cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800" onClick={() => toggleSort('cat')}>
                               Category {sortField === 'cat' ? (sortAsc ? '↑' : '↓') : '↕'}
                             </TableHead>
-                            <TableHead className="font-bold text-slate-800 text-xs cursor-pointer hover:bg-slate-100" onClick={() => toggleSort('price')}>
+                            <TableHead className="font-bold text-slate-800 dark:text-slate-200 text-xs cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800" onClick={() => toggleSort('price')}>
                               Price {sortField === 'price' ? (sortAsc ? '↑' : '↓') : '↕'}
                             </TableHead>
-                            <TableHead className="font-bold text-slate-800 text-xs cursor-pointer hover:bg-slate-100" onClick={() => toggleSort('qty')}>
+                            <TableHead className="font-bold text-slate-800 dark:text-slate-200 text-xs cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800" onClick={() => toggleSort('qty')}>
                               Stock {sortField === 'qty' ? (sortAsc ? '↑' : '↓') : '↕'}
                             </TableHead>
-                            <TableHead className="font-bold text-slate-800 text-xs">Min</TableHead>
-                            <TableHead className="font-bold text-slate-800 text-xs">Supplier</TableHead>
-                            <TableHead className="font-bold text-slate-800 text-xs">Status</TableHead>
-                            <TableHead className="font-bold text-slate-800 text-xs">Actions</TableHead>
+                            <TableHead className="font-bold text-slate-800 dark:text-slate-200 text-xs">Min</TableHead>
+                            <TableHead className="font-bold text-slate-800 dark:text-slate-200 text-xs">Supplier</TableHead>
+                            <TableHead className="font-bold text-slate-800 dark:text-slate-200 text-xs">Status</TableHead>
+                            <TableHead className="font-bold text-slate-800 dark:text-slate-200 text-xs">Actions</TableHead>
                           </TableRow>
                         </TableHeader>
-                        <TableBody>
+                        <TableBody className="divide-y divide-slate-100 dark:divide-slate-800/60">
                           {filtered.slice(pg * effectivePageSize, (pg + 1) * effectivePageSize).map((p) => (
-                            <TableRow key={p.id} className={`hover:bg-slate-50 transition-colors ${selectedIds.includes(p.id) ? 'bg-slate-100/70' : ''}`}>
+                            <TableRow key={p.id} className={`hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors ${selectedIds.includes(p.id) ? 'bg-slate-100/70 dark:bg-slate-800/70' : ''}`}>
                               <TableCell className="w-10">
                                 <input
                                   type="checkbox"
@@ -940,31 +972,31 @@ export default function Page() {
                                   className="rounded text-slate-900 focus:ring-slate-900 cursor-pointer"
                                 />
                               </TableCell>
-                              <TableCell className="font-mono text-xs font-semibold text-slate-700">{p.sku}</TableCell>
-                              <TableCell><div className="flex size-8 items-center justify-center rounded-md bg-slate-100 text-xs font-bold text-slate-700">{p.name[0]}</div></TableCell>
-                              <TableCell className="font-semibold text-slate-900 cursor-pointer hover:text-emerald-700 hover:underline" onClick={() => setDrawerProd(p)}>{p.name}</TableCell>
-                              <TableCell className="text-slate-600">{p.cat}</TableCell>
-                              <TableCell className="font-medium">${p.price.toFixed(2)}</TableCell>
-                              <TableCell className="font-bold">{p.qty}</TableCell>
-                              <TableCell className="text-slate-500">{p.min}</TableCell>
-                              <TableCell className="text-slate-600">{supName(p.sup)}</TableCell>
+                              <TableCell className="font-mono text-xs font-semibold text-slate-700 dark:text-slate-300">{p.sku}</TableCell>
+                              <TableCell><div className="flex size-8 items-center justify-center rounded-md bg-slate-100 dark:bg-slate-800 text-xs font-bold text-slate-700 dark:text-slate-300">{p.name[0]}</div></TableCell>
+                              <TableCell className="font-semibold text-slate-900 dark:text-white cursor-pointer hover:text-emerald-700 dark:hover:text-emerald-400 hover:underline" onClick={() => setDrawerProd(p)}>{p.name}</TableCell>
+                              <TableCell className="text-slate-600 dark:text-slate-300">{p.cat}</TableCell>
+                              <TableCell className="font-medium text-slate-900 dark:text-slate-200">${p.price.toFixed(2)}</TableCell>
+                              <TableCell className="font-bold text-slate-900 dark:text-white">{p.qty}</TableCell>
+                              <TableCell className="text-slate-500 dark:text-slate-400">{p.min}</TableCell>
+                              <TableCell className="text-slate-600 dark:text-slate-300">{supName(p.sup)}</TableCell>
                               <TableCell><Sb s={status(p)} /></TableCell>
                               <TableCell>
                                 <div className="flex items-center gap-1">
-                                  <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-slate-600 hover:bg-slate-100" onClick={() => setDrawerProd(p)} title="Quick View Drawer" aria-label={`View details for ${p.name}`}>
+                                  <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800" onClick={() => setDrawerProd(p)} title="Quick View Drawer" aria-label={`View details for ${p.name}`}>
                                     <Eye className="size-4" />
                                   </Button>
-                                  <Button size="sm" variant="outline" className="h-8 px-2 text-xs text-emerald-800 bg-emerald-50 border-emerald-300 hover:bg-emerald-100 font-semibold" onClick={() => openQuickAction(p, 'Stock In')} aria-label={`Stock in ${p.name}`}>
+                                  <Button size="sm" variant="outline" className="h-8 px-2 text-xs text-emerald-800 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-500/10 border-emerald-300 dark:border-emerald-500/30 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 font-semibold cursor-pointer" onClick={() => openQuickAction(p, 'Stock In')} aria-label={`Stock in ${p.name}`}>
                                     <ArrowDownToLine className="size-3.5 mr-1" />In
                                   </Button>
-                                  <Button size="sm" variant="outline" className="h-8 px-2 text-xs text-rose-800 bg-rose-50 border-rose-300 hover:bg-rose-100 font-semibold" onClick={() => openQuickAction(p, 'Stock Out')} aria-label={`Stock out ${p.name}`}>
+                                  <Button size="sm" variant="outline" className="h-8 px-2 text-xs text-rose-800 dark:text-rose-300 bg-rose-50 dark:bg-rose-500/10 border-rose-300 dark:border-rose-500/30 hover:bg-rose-100 dark:hover:bg-rose-500/20 font-semibold cursor-pointer" onClick={() => openQuickAction(p, 'Stock Out')} aria-label={`Stock out ${p.name}`}>
                                     <ArrowUpFromLine className="size-3.5 mr-1" />Out
                                   </Button>
-                                  <Button size="sm" variant="ghost" className="h-8 w-8 p-0" onClick={() => setModal({ k: 'product', data: p })} aria-label={`Edit ${p.name}`}>
-                                    <Pencil className="size-4 text-slate-600" />
+                                  <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer" onClick={() => setModal({ k: 'product', data: p })} aria-label={`Edit ${p.name}`}>
+                                    <Pencil className="size-4" />
                                   </Button>
-                                  <Button size="sm" variant="ghost" className="h-8 w-8 p-0 hover:bg-red-50" onClick={() => setDeleteConfirm(p)} aria-label={`Delete ${p.name}`}>
-                                    <Trash2 className="size-4 text-red-600" />
+                                  <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 cursor-pointer" onClick={() => setDeleteConfirm(p)} aria-label={`Delete ${p.name}`}>
+                                    <Trash2 className="size-4" />
                                   </Button>
                                 </div>
                               </TableCell>
@@ -977,36 +1009,36 @@ export default function Page() {
                     /* VISUAL CARDS GRID VIEW */
                     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                       {filtered.slice(pg * effectivePageSize, (pg + 1) * effectivePageSize).map((p) => (
-                        <div key={p.id} className="rounded-xl border border-slate-200 bg-white p-4 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between">
+                        <div key={p.id} className="rounded-xl border border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-900/70 p-4 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between">
                           <div>
                             <div className="flex items-start justify-between gap-2 mb-2">
                               <div className="flex items-center gap-2">
-                                <div className="flex size-9 items-center justify-center rounded-lg bg-slate-100 font-bold text-slate-800 text-sm">
+                                <div className="flex size-9 items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-800 font-bold text-slate-800 dark:text-slate-200 text-sm">
                                   {p.name[0]}
                                 </div>
                                 <div>
-                                  <h3 className="font-bold text-slate-900 text-sm cursor-pointer hover:text-emerald-700" onClick={() => setDrawerProd(p)}>{p.name}</h3>
-                                  <p className="font-mono text-[11px] text-slate-500">{p.sku}</p>
+                                  <h3 className="font-bold text-slate-900 dark:text-white text-sm cursor-pointer hover:text-emerald-700 dark:hover:text-emerald-400" onClick={() => setDrawerProd(p)}>{p.name}</h3>
+                                  <p className="font-mono text-[11px] text-slate-500 dark:text-slate-400">{p.sku}</p>
                                 </div>
                               </div>
                               <Sb s={status(p)} />
                             </div>
 
-                            <div className="mt-3 grid grid-cols-2 gap-2 text-xs border-t border-b border-slate-100 py-2.5 my-2">
-                              <div><span className="text-slate-500">Price:</span> <b className="text-slate-900">${p.price.toFixed(2)}</b></div>
-                              <div><span className="text-slate-500">Stock:</span> <b className="text-slate-900">{p.qty} units</b></div>
-                              <div><span className="text-slate-500">Min Threshold:</span> <span>{p.min}</span></div>
-                              <div><span className="text-slate-500">Asset Value:</span> <b className="text-emerald-800">${(p.qty * p.price).toFixed(0)}</b></div>
+                            <div className="mt-3 grid grid-cols-2 gap-2 text-xs border-t border-b border-slate-100 dark:border-slate-800/80 py-2.5 my-2">
+                              <div><span className="text-slate-500 dark:text-slate-400">Price:</span> <b className="text-slate-900 dark:text-white">${p.price.toFixed(2)}</b></div>
+                              <div><span className="text-slate-500 dark:text-slate-400">Stock:</span> <b className="text-slate-900 dark:text-white">{p.qty} units</b></div>
+                              <div><span className="text-slate-500 dark:text-slate-400">Min Threshold:</span> <span className="text-slate-700 dark:text-slate-300 font-medium">{p.min}</span></div>
+                              <div><span className="text-slate-500 dark:text-slate-400">Asset Value:</span> <b className="text-emerald-800 dark:text-emerald-400">${(p.qty * p.price).toFixed(0)}</b></div>
                             </div>
                           </div>
 
                           <div className="flex items-center justify-between gap-2 pt-2">
-                            <Button size="sm" variant="ghost" className="text-xs text-slate-600" onClick={() => setDrawerProd(p)}>
+                            <Button size="sm" variant="ghost" className="text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer" onClick={() => setDrawerProd(p)}>
                               <Eye className="size-3.5 mr-1" /> View Details
                             </Button>
                             <div className="flex gap-1">
-                              <Button size="sm" variant="outline" className="bg-emerald-50 text-emerald-900 border-emerald-300" onClick={() => openQuickAction(p, 'Stock In')}>+ In</Button>
-                              <Button size="sm" variant="outline" className="bg-rose-50 text-rose-900 border-rose-300" onClick={() => openQuickAction(p, 'Stock Out')}>- Out</Button>
+                              <Button size="sm" variant="outline" className="bg-emerald-50 dark:bg-emerald-500/10 text-emerald-900 dark:text-emerald-300 border-emerald-300 dark:border-emerald-500/30 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 cursor-pointer" onClick={() => openQuickAction(p, 'Stock In')}>+ In</Button>
+                              <Button size="sm" variant="outline" className="bg-rose-50 dark:bg-rose-500/10 text-rose-900 dark:text-rose-300 border-rose-300 dark:border-rose-500/30 hover:bg-rose-100 dark:hover:bg-rose-500/20 cursor-pointer" onClick={() => openQuickAction(p, 'Stock Out')}>- Out</Button>
                             </div>
                           </div>
                         </div>
@@ -1015,14 +1047,14 @@ export default function Page() {
                   )}
 
                   {/* Density & Pagination Selector */}
-                  <div className="flex flex-wrap items-center justify-between text-sm text-slate-500 pt-2 gap-2">
+                  <div className="flex flex-wrap items-center justify-between text-sm text-slate-500 dark:text-slate-400 pt-2 gap-2">
                     <div className="flex items-center gap-2">
                       <span>Showing {filtered.length} products</span>
-                      <span className="text-slate-300">|</span>
+                      <span className="text-slate-300 dark:text-slate-700">|</span>
                       <label className="flex items-center gap-1 text-xs font-medium">
                         Rows per page:
                         <select
-                          className="h-7 rounded border border-slate-300 bg-white px-1.5 text-xs text-slate-700 outline-none cursor-pointer"
+                          className="h-7 rounded border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 px-1.5 text-xs text-slate-700 dark:text-slate-200 outline-none cursor-pointer"
                           value={pageSize}
                           onChange={(e) => { setPageSize(Number(e.target.value)); setPg(0) }}
                         >
@@ -1043,19 +1075,19 @@ export default function Page() {
               ) : (
                 <div className="grid gap-3">
                   <div className="flex justify-between items-center">
-                    <p className="text-xs text-slate-500">Manage category taxonomy for inventory organization.</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">Manage category taxonomy for inventory organization.</p>
                     <Button size="sm" onClick={() => { const n = prompt('New category name:'); if (n?.trim()) { setCats([...cats, n.trim()]); say(`Category "${n.trim()}" added`) } }}><Plus className="size-4" />Add Category</Button>
                   </div>
                   {cats.map((c) => {
                     const assignedProds = prods.filter((p) => p.cat === c)
                     return (
-                      <div key={c} className="flex items-center justify-between rounded-lg border border-slate-200 p-3 bg-white hover:border-slate-300 transition-colors">
+                      <div key={c} className="flex items-center justify-between rounded-lg border border-slate-200 dark:border-slate-800 p-3 bg-white dark:bg-slate-900/60 hover:border-slate-300 dark:hover:border-slate-700 transition-colors">
                         <div className="flex items-center gap-3">
-                          <span className="font-bold text-sm text-slate-900">{c}</span>
+                          <span className="font-bold text-sm text-slate-900 dark:text-white">{c}</span>
                           <Badge variant="outline">{assignedProds.length} products</Badge>
                         </div>
                         <div className="flex gap-1">
-                          <Button size="sm" variant="ghost" onClick={() => { const n = prompt('Rename category:', c); if (n?.trim()) { setCats(cats.map((x) => (x === c ? n.trim() : x))); setProds(prods.map((p) => (p.cat === c ? { ...p, cat: n.trim() } : p))); say('Category renamed') } }} aria-label={`Rename category ${c}`}><Pencil className="size-4" /></Button>
+                          <Button size="sm" variant="ghost" onClick={() => { const n = prompt('Rename category:', c); if (n?.trim()) { setCats(cats.map((x) => (x === c ? n.trim() : x))); setProds(prods.map((p) => (p.cat === c ? { ...p, cat: n.trim() } : p))); say('Category renamed') } }} aria-label={`Rename category ${c}`}><Pencil className="size-4 text-slate-600 dark:text-slate-400" /></Button>
                           <Button size="sm" variant="ghost" onClick={() => {
                             if (assignedProds.length > 0) {
                               say(`Cannot delete "${c}": ${assignedProds.length} assigned products.`, () => {
@@ -1080,10 +1112,10 @@ export default function Page() {
 
           {/* ---------------- INVENTORY OPERATIONS VIEW ---------------- */}
           {view === 'Inventory Operations' && (
-            <Card className="border-slate-200"><CardContent className="grid gap-4 p-4">
-              <p className="text-xs text-slate-500">Record stock movement transactions and physical inventory count adjustments.</p>
+            <Card className="border border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-slate-900/70"><CardContent className="grid gap-4 p-4">
+              <p className="text-xs text-slate-500 dark:text-slate-400">Record stock movement transactions and physical inventory count adjustments.</p>
               
-              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-3">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200/80 dark:border-slate-800/80 pb-3">
                 <div className="flex flex-wrap gap-2">
                   {['Stock In', 'Stock Out', 'Adjustment'].map((t) => (
                     <Button key={t} size="sm" variant={quickOp.type === t ? 'default' : 'outline'} onClick={() => setQuickOp({ ...quickOp, type: t })}>
@@ -1103,7 +1135,7 @@ export default function Page() {
               </div>
 
               {/* Operations Form */}
-              <div className="grid gap-4 border border-slate-200 rounded-xl p-4 bg-slate-50/50">
+              <div className="grid gap-4 border border-slate-200/80 dark:border-slate-800/80 rounded-xl p-4 bg-slate-50/50 dark:bg-slate-900/40">
                 <div className="grid gap-3 sm:grid-cols-2">
                   <Field label="Target Product">
                     <select className={inp} value={quickOp.prod?.id || prods[0]?.id} onChange={(e) => { const p = pname(Number(e.target.value)); setQuickOp({ ...quickOp, prod: p, qty: quickOp.type === 'Adjustment' ? String(p?.qty) : '1' }) }}>
@@ -1137,18 +1169,18 @@ export default function Page() {
                 </div>
 
                 {quickOp.prod && (
-                  <div className="rounded-lg bg-white p-3 border border-slate-200 text-xs flex flex-wrap justify-between items-center gap-2">
+                  <div className="rounded-lg bg-white dark:bg-slate-900/80 p-3 border border-slate-200/80 dark:border-slate-800/80 text-xs flex flex-wrap justify-between items-center gap-2">
                     <div>
-                      <span className="text-slate-500">Current Stock:</span> <b className="text-slate-900">{quickOp.prod.qty} units</b>
+                      <span className="text-slate-500 dark:text-slate-400">Current Stock:</span> <b className="text-slate-900 dark:text-white">{quickOp.prod.qty} units</b>
                       {quickOp.type === 'Adjustment' && (
-                        <span className="ml-3 font-medium text-slate-700">
+                        <span className="ml-3 font-medium text-slate-700 dark:text-slate-300">
                           Variance: {Number(quickOp.qty) - quickOp.prod.qty >= 0 ? '+' : ''}{Number(quickOp.qty) - quickOp.prod.qty} units
                           (${Math.abs((Number(quickOp.qty) - quickOp.prod.qty) * quickOp.prod.price).toFixed(2)})
                         </span>
                       )}
                     </div>
                     {quickOp.type === 'Stock Out' && Number(quickOp.qty) > quickOp.prod.qty && (
-                      <div className="text-red-700 font-semibold flex items-center gap-1"><AlertTriangle className="size-4" /> Exceeds available stock ({quickOp.prod.qty})</div>
+                      <div className="text-red-700 dark:text-rose-400 font-semibold flex items-center gap-1"><AlertTriangle className="size-4" /> Exceeds available stock ({quickOp.prod.qty})</div>
                     )}
                   </div>
                 )}
@@ -1169,32 +1201,32 @@ export default function Page() {
 
           {/* ---------------- SUPPLIERS VIEW ---------------- */}
           {view === 'Suppliers' && (
-            <Card className="border-slate-200"><CardContent className="grid gap-4 p-4">
+            <Card className="border border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-slate-900/70"><CardContent className="grid gap-4 p-4">
               <div className="flex justify-between items-center">
-                <p className="text-xs text-slate-500">Manage vendor contact details and fulfillment ratings.</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400">Manage vendor contact details and fulfillment ratings.</p>
                 {admin && <Button size="sm" onClick={() => setModal({ k: 'supplier' })}><Plus className="size-4" />Add Supplier</Button>}
               </div>
               
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 {sups.map((s) => (
-                  <div key={s.id} className="rounded-xl border border-slate-200 bg-white p-4 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between">
+                  <div key={s.id} className="rounded-xl border border-slate-200 dark:border-slate-800/80 bg-white dark:bg-slate-900/70 p-4 shadow-2xs hover:shadow-md transition-all flex flex-col justify-between">
                     <div>
                       <div className="flex items-center justify-between mb-2">
-                        <h3 className="font-bold text-slate-900 text-sm">{s.name}</h3>
+                        <h3 className="font-bold text-slate-900 dark:text-white text-sm">{s.name}</h3>
                         <Badge variant="outline" className={s.active ? SC['In Stock'] : ''}>{s.active ? 'Active' : 'Inactive'}</Badge>
                       </div>
-                      <p className="text-xs text-slate-600 mb-1"><b>Contact:</b> {s.contact}</p>
-                      <p className="text-xs text-slate-600 mb-1"><b>Email:</b> {s.email}</p>
-                      <p className="text-xs text-slate-600 mb-1"><b>Phone:</b> {s.phone}</p>
-                      <p className="text-xs text-slate-500 mb-2 font-mono">{s.address}</p>
-                      <div className="text-[11px] bg-slate-50 p-2 rounded-md border border-slate-100 text-slate-600">
+                      <p className="text-xs text-slate-600 dark:text-slate-300 mb-1"><b>Contact:</b> {s.contact}</p>
+                      <p className="text-xs text-slate-600 dark:text-slate-300 mb-1"><b>Email:</b> {s.email}</p>
+                      <p className="text-xs text-slate-600 dark:text-slate-300 mb-1"><b>Phone:</b> {s.phone}</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mb-2 font-mono">{s.address}</p>
+                      <div className="text-[11px] bg-slate-50 dark:bg-slate-800/60 p-2 rounded-md border border-slate-100 dark:border-slate-800 text-slate-600 dark:text-slate-300">
                         <b>Categories:</b> {s.cats}
                       </div>
                     </div>
                     {admin && (
-                      <div className="pt-3 border-t border-slate-100 mt-3 flex justify-between items-center">
-                        <span className="text-[11px] font-semibold text-emerald-700">Fulfillment: {s.rating || '98%'}</span>
-                        <Button size="sm" variant="ghost" onClick={() => setModal({ k: 'supplier', data: s })} aria-label={`Edit supplier ${s.name}`}><Pencil className="size-4" /></Button>
+                      <div className="pt-3 border-t border-slate-100 dark:border-slate-800 mt-3 flex justify-between items-center">
+                        <span className="text-[11px] font-semibold text-emerald-700 dark:text-emerald-400">Fulfillment: {s.rating || '98%'}</span>
+                        <Button size="sm" variant="ghost" onClick={() => setModal({ k: 'supplier', data: s })} aria-label={`Edit supplier ${s.name}`}><Pencil className="size-4 text-slate-600 dark:text-slate-400" /></Button>
                       </div>
                     )}
                   </div>
@@ -1205,7 +1237,7 @@ export default function Page() {
 
           {/* ---------------- TRANSACTIONS VIEW ---------------- */}
           {view === 'Transactions' && (
-            <Card className="border-slate-200"><CardContent className="grid gap-3 p-4">
+            <Card className="border border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-slate-900/70"><CardContent className="grid gap-3 p-4">
               <div className="flex flex-wrap items-center gap-2">
                 <input className={inp + ' sm:w-56'} placeholder="Search SKU or product name..." value={tq} onChange={(e) => setTq(e.target.value)} />
                 <Sel v={tt} set={setTt} opts={['Stock In', 'Stock Out', 'Adjustment']} ph="All Transaction Types" label="Filter transaction type" />
@@ -1220,26 +1252,26 @@ export default function Page() {
               </div>
 
               {d1 && d2 && d1 > d2 && (
-                <div className="rounded-lg bg-red-50 p-3 border border-red-200 text-xs text-red-700 font-semibold flex items-center gap-2">
+                <div className="rounded-lg bg-red-50 dark:bg-rose-950/40 p-3 border border-red-200 dark:border-rose-900/50 text-xs text-red-700 dark:text-rose-300 font-semibold flex items-center gap-2">
                   <AlertTriangle className="size-4 text-red-600 shrink-0" />
                   Invalid Date Range: Start Date cannot be after End Date. Please adjust your date filters.
                 </div>
               )}
 
               {tf.length === 0 ? (
-                <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-slate-300 py-10 text-center bg-slate-50/50">
+                <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-slate-300 dark:border-slate-800 py-10 text-center bg-slate-50/50 dark:bg-slate-900/40">
                   <Boxes className="size-8 text-slate-400 mb-2" />
-                  <h3 className="font-semibold text-slate-900">No transactions match your search</h3>
+                  <h3 className="font-semibold text-slate-900 dark:text-white">No transactions match your search</h3>
                   <Button size="sm" variant="outline" className="mt-3" onClick={() => { setTq(''); setTt(''); setD1(''); setD2('') }}>Reset Filters</Button>
                 </div>
               ) : (
                 <div className="max-h-[60vh] overflow-auto">
                   <Table><TH cols={['Date / Time', 'Type', 'Product', 'Quantity', 'Reference / Reason & Notes', 'Performed By']} />
-                    <TableBody>{tf.map(TxRow)}</TableBody>
+                    <TableBody className="divide-y divide-slate-100 dark:divide-slate-800/60">{tf.map(TxRow)}</TableBody>
                   </Table>
                 </div>
               )}
-              <p className="text-xs text-slate-500">{tf.length} audit records found</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">{tf.length} audit records found</p>
             </CardContent></Card>
           )}
 
@@ -1260,27 +1292,27 @@ export default function Page() {
                     <Kpi t="Average Unit Valuation" v={currency + (value / (items || 1)).toFixed(2)} i={DollarSign} />
                     <Kpi t="Top Asset Category" v={[...byCat].sort((a, b) => b.value - a.value)[0]?.name || 'N/A'} i={Package} />
                   </div>
-                  <Card className="border-slate-200"><CardHeader><CardTitle className="text-sm font-bold text-slate-900">Inventory Capital Valuation by Category ({currency})</CardTitle></CardHeader><CardContent className="h-72"><ResponsiveContainer><BarChart data={byCat}><CartesianGrid strokeDasharray="3 3" vertical={false} /><XAxis dataKey="name" fontSize={12} /><YAxis fontSize={12} /><Tooltip /><Bar dataKey="value" fill="#059669" radius={[4, 4, 0, 0]} /></BarChart></ResponsiveContainer></CardContent></Card>
+                  <Card className="border border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-slate-900/70"><CardHeader><CardTitle className="text-sm font-bold text-slate-900 dark:text-white">Inventory Capital Valuation by Category ({currency})</CardTitle></CardHeader><CardContent className="h-72"><ResponsiveContainer><BarChart data={byCat}><CartesianGrid strokeDasharray="3 3" vertical={false} stroke={isDark ? '#1e293b' : '#e2e8f0'} /><XAxis dataKey="name" fontSize={12} stroke={isDark ? '#94a3b8' : '#64748b'} /><YAxis fontSize={12} stroke={isDark ? '#94a3b8' : '#64748b'} /><Tooltip contentStyle={{ backgroundColor: isDark ? '#0f172a' : '#ffffff', borderColor: isDark ? '#334155' : '#e2e8f0', borderRadius: '12px', color: isDark ? '#ffffff' : '#0f172a' }} /><Bar dataKey="value" fill={isDark ? '#10b981' : '#059669'} radius={[4, 4, 0, 0]} /></BarChart></ResponsiveContainer></CardContent></Card>
                 </>
               )}
 
               {rep === 'Low-Stock & Reorder' && (
                 <>
                   <div className="grid grid-cols-3 gap-3">
-                    <Kpi t="Low Stock Warnings" v={low.length} i={AlertTriangle} c="text-amber-700" />
-                    <Kpi t="Out of Stock Emergencies" v={out.length} i={AlertCircle} c="text-red-700" />
+                    <Kpi t="Low Stock Warnings" v={low.length} i={AlertTriangle} c="text-amber-600 dark:text-amber-400" />
+                    <Kpi t="Out of Stock Emergencies" v={out.length} i={AlertCircle} c="text-rose-600 dark:text-rose-400" />
                     <Kpi t="Total Units Needed to Reorder" v={[...low, ...out].reduce((a, p) => a + (p.min * reorderMult - p.qty), 0)} i={Truck} />
                   </div>
-                  <Card className="border-slate-200"><CardContent className="overflow-x-auto p-4">
+                  <Card className="border border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-slate-900/70"><CardContent className="overflow-x-auto p-4">
                     <Table><TH cols={['Product', 'Supplier', 'Current Stock', 'Min Threshold', 'Suggested Reorder Qty', 'Status']} />
-                      <TableBody>
+                      <TableBody className="divide-y divide-slate-100 dark:divide-slate-800/60">
                         {[...out, ...low].map((p) => (
-                          <TableRow key={p.id}>
-                            <TableCell className="font-semibold">{p.name}</TableCell>
-                            <TableCell>{supName(p.sup)}</TableCell>
-                            <TableCell>{p.qty}</TableCell>
-                            <TableCell>{p.min}</TableCell>
-                            <TableCell className="font-bold text-emerald-900">+{p.min * reorderMult - p.qty}</TableCell>
+                          <TableRow key={p.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                            <TableCell className="font-semibold text-slate-900 dark:text-white">{p.name}</TableCell>
+                            <TableCell className="text-slate-600 dark:text-slate-300">{supName(p.sup)}</TableCell>
+                            <TableCell className="text-slate-900 dark:text-white">{p.qty}</TableCell>
+                            <TableCell className="text-slate-500 dark:text-slate-400">{p.min}</TableCell>
+                            <TableCell className="font-bold text-emerald-800 dark:text-emerald-400">+{p.min * reorderMult - p.qty}</TableCell>
                             <TableCell><Sb s={status(p)} /></TableCell>
                           </TableRow>
                         ))}
@@ -1292,8 +1324,8 @@ export default function Page() {
 
               {rep === 'Fast vs Slow Moving' && (
                 <div className="grid gap-4 lg:grid-cols-2">
-                  {[['Fast-Moving (Top 5 Outflow)', movers.slice(0, 5), '#0f172a'], ['Slow-Moving (Bottom 5 Outflow)', movers.slice(-5).reverse(), '#94a3b8']].map(([t, d, c]: A) => (
-                    <Card key={t} className="border-slate-200"><CardHeader><CardTitle className="text-sm font-bold text-slate-900">{t}</CardTitle></CardHeader><CardContent className="h-64"><ResponsiveContainer><BarChart data={d} layout="vertical"><CartesianGrid strokeDasharray="3 3" horizontal={false} /><XAxis type="number" fontSize={12} /><YAxis type="category" dataKey="name" width={120} fontSize={11} /><Tooltip /><Bar dataKey="sold" fill={c} radius={[0, 4, 4, 0]} name="Units Sold/Issued" /></BarChart></ResponsiveContainer></CardContent></Card>
+                  {[['Fast-Moving (Top 5 Outflow)', movers.slice(0, 5), isDark ? '#6366f1' : '#0f172a'], ['Slow-Moving (Bottom 5 Outflow)', movers.slice(-5).reverse(), isDark ? '#94a3b8' : '#64748b']].map(([t, d, c]: A) => (
+                    <Card key={t} className="border border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-slate-900/70"><CardHeader><CardTitle className="text-sm font-bold text-slate-900 dark:text-white">{t}</CardTitle></CardHeader><CardContent className="h-64"><ResponsiveContainer><BarChart data={d} layout="vertical"><CartesianGrid strokeDasharray="3 3" horizontal={false} stroke={isDark ? '#1e293b' : '#e2e8f0'} /><XAxis type="number" fontSize={12} stroke={isDark ? '#94a3b8' : '#64748b'} /><YAxis type="category" dataKey="name" width={120} fontSize={11} stroke={isDark ? '#94a3b8' : '#64748b'} /><Tooltip contentStyle={{ backgroundColor: isDark ? '#0f172a' : '#ffffff', borderColor: isDark ? '#334155' : '#e2e8f0', borderRadius: '12px', color: isDark ? '#ffffff' : '#0f172a' }} /><Bar dataKey="sold" fill={c} radius={[0, 4, 4, 0]} name="Units Sold/Issued" /></BarChart></ResponsiveContainer></CardContent></Card>
                   ))}
                 </div>
               )}
@@ -1302,24 +1334,24 @@ export default function Page() {
 
           {/* ---------------- USER MANAGEMENT VIEW ---------------- */}
           {view === 'User Management' && (admin ? (
-            <Card className="border-slate-200"><CardContent className="overflow-x-auto p-4"><Table><TH cols={['Name', 'Email', 'Role', 'Status', 'Last Login']} />
-              <TableBody>
+            <Card className="border border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-slate-900/70"><CardContent className="overflow-x-auto p-4"><Table><TH cols={['Name', 'Email', 'Role', 'Status', 'Last Login']} />
+              <TableBody className="divide-y divide-slate-100 dark:divide-slate-800/60">
                 {users.map((u) => (
-                  <TableRow key={u.id}>
-                    <TableCell className="font-semibold">{u.name}</TableCell>
-                    <TableCell>{u.email}</TableCell>
+                  <TableRow key={u.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                    <TableCell className="font-semibold text-slate-900 dark:text-white">{u.name}</TableCell>
+                    <TableCell className="text-slate-600 dark:text-slate-300">{u.email}</TableCell>
                     <TableCell><Badge variant="outline">{u.role}</Badge></TableCell>
                     <TableCell><Badge variant="outline" className={u.active ? SC['In Stock'] : ''}>{u.active ? 'Active' : 'Inactive'}</Badge></TableCell>
-                    <TableCell className="text-slate-500 text-xs font-mono">{u.last}</TableCell>
+                    <TableCell className="text-slate-500 dark:text-slate-400 text-xs font-mono">{u.last}</TableCell>
                   </TableRow>
                 ))}
               </TableBody></Table></CardContent></Card>
-          ) : <p className="text-slate-500 text-sm">Administrator permissions required.</p>)}
+          ) : <p className="text-slate-500 dark:text-slate-400 text-sm">Administrator permissions required.</p>)}
 
           {/* ---------------- SETTINGS VIEW ---------------- */}
           {view === 'Settings' && (
-            <Card className="border-slate-200"><CardContent className="p-5 grid gap-4 max-w-lg">
-              <h2 className="font-bold text-base text-slate-900">System Configuration & Preferences</h2>
+            <Card className="border border-slate-200/80 dark:border-slate-800/80 bg-white dark:bg-slate-900/70"><CardContent className="p-5 grid gap-4 max-w-lg">
+              <h2 className="font-bold text-base text-slate-900 dark:text-white">System Configuration & Preferences</h2>
               <Field label="Currency Symbol">
                 <select className={inp} value={currency} onChange={(e) => { setCurrency(e.target.value); say(`Currency symbol set to ${e.target.value}`) }}>
                   <option value="$">$ (USD)</option>
@@ -1341,21 +1373,21 @@ export default function Page() {
         {/* 1. Global Command Palette Modal (Ctrl+K) */}
         {cmdOpen && (
           <div className="fixed inset-0 z-50 flex items-start justify-center pt-20 bg-slate-950/60 p-4 backdrop-blur-xs animate-in fade-in" onClick={() => setCmdOpen(false)}>
-            <div className="w-full max-w-xl overflow-hidden rounded-xl bg-white shadow-2xl border border-slate-200" onClick={(e) => e.stopPropagation()}>
-              <div className="flex items-center border-b border-slate-200 px-3">
+            <div className="w-full max-w-xl overflow-hidden rounded-xl bg-white dark:bg-slate-900 shadow-2xl border border-slate-200 dark:border-slate-800" onClick={(e) => e.stopPropagation()}>
+              <div className="flex items-center border-b border-slate-200 dark:border-slate-800 px-3">
                 <Search className="size-4 text-slate-400 mr-2" />
                 <input
-                  className="h-12 w-full bg-transparent text-sm outline-none placeholder:text-slate-400 font-medium"
+                  className="h-12 w-full bg-transparent text-sm outline-none placeholder:text-slate-400 dark:placeholder:text-slate-500 text-slate-900 dark:text-white font-medium"
                   placeholder="Type a product, SKU, supplier, or action..."
                   value={cmdQuery}
                   onChange={(e) => setCmdQuery(e.target.value)}
                   autoFocus
                 />
-                <button onClick={() => setCmdOpen(false)} className="rounded p-1 text-slate-400 hover:text-slate-600"><X className="size-4" /></button>
+                <button onClick={() => setCmdOpen(false)} className="rounded p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"><X className="size-4" /></button>
               </div>
 
               <div className="max-h-80 overflow-y-auto p-2 text-xs">
-                <p className="px-3 py-1.5 font-bold text-slate-400 uppercase tracking-wider text-[10px]">Products & Items</p>
+                <p className="px-3 py-1.5 font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider text-[10px]">Products & Items</p>
                 {prods
                   .filter((p) => (p.name + p.sku).toLowerCase().includes(cmdQuery.toLowerCase()))
                   .slice(0, 5)
@@ -1363,25 +1395,25 @@ export default function Page() {
                     <div
                       key={p.id}
                       onClick={() => { setDrawerProd(p); setCmdOpen(false) }}
-                      className="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-slate-100 cursor-pointer transition-colors"
+                      className="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer transition-colors"
                     >
                       <div className="flex items-center gap-2">
-                        <Package className="size-4 text-slate-500" />
-                        <span className="font-semibold text-slate-900">{p.name}</span>
+                        <Package className="size-4 text-slate-500 dark:text-slate-400" />
+                        <span className="font-semibold text-slate-900 dark:text-white">{p.name}</span>
                         <span className="font-mono text-slate-400 text-[11px]">{p.sku}</span>
                       </div>
                       <Sb s={status(p)} />
                     </div>
                   ))}
 
-                <p className="px-3 py-1.5 font-bold text-slate-400 uppercase tracking-wider text-[10px] mt-2">Navigation Views</p>
+                <p className="px-3 py-1.5 font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider text-[10px] mt-2">Navigation Views</p>
                 {NAV.map(([l, I]) => (
                   <div
                     key={l}
                     onClick={() => { setView(l); setCmdOpen(false) }}
-                    className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-100 cursor-pointer transition-colors font-medium text-slate-800"
+                    className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer transition-colors font-medium text-slate-800 dark:text-slate-200"
                   >
-                    <I className="size-4 text-slate-500" />
+                    <I className="size-4 text-slate-500 dark:text-slate-400" />
                     <span>Go to {l}</span>
                   </div>
                 ))}
@@ -1393,33 +1425,33 @@ export default function Page() {
         {/* 2. Real-time Notifications Side Drawer */}
         {notifOpen && (
           <div className="fixed inset-0 z-50 flex justify-end bg-slate-950/40 backdrop-blur-xs animate-in fade-in" onClick={() => setNotifOpen(false)}>
-            <div className="w-full max-w-sm h-full bg-white shadow-2xl p-5 border-l border-slate-200 flex flex-col" onClick={(e) => e.stopPropagation()}>
-              <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
+            <div className="w-full max-w-sm h-full bg-white dark:bg-slate-900 shadow-2xl p-5 border-l border-slate-200 dark:border-slate-800 flex flex-col" onClick={(e) => e.stopPropagation()}>
+              <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3 mb-4">
                 <div className="flex items-center gap-2">
                   <Bell className="size-5 text-emerald-600" />
-                  <h3 className="font-bold text-slate-900 text-base">Notifications</h3>
+                  <h3 className="font-bold text-slate-900 dark:text-white text-base">Notifications</h3>
                 </div>
-                <button onClick={() => setNotifOpen(false)}><X className="size-4 text-slate-400" /></button>
+                <button onClick={() => setNotifOpen(false)} className="cursor-pointer"><X className="size-4 text-slate-400 hover:text-slate-200" /></button>
               </div>
 
               <div className="flex-1 overflow-y-auto space-y-3">
                 {out.map((p) => (
-                  <div key={p.id} className="p-3 rounded-lg bg-red-50 border border-red-200 text-xs">
-                    <p className="font-bold text-red-900 flex items-center gap-1.5"><AlertCircle className="size-3.5 text-red-600" /> Out of Stock Emergency</p>
-                    <p className="text-slate-700 mt-1"><b>{p.name}</b> (`{p.sku}`) has reached 0 units.</p>
-                    <Button size="sm" className="mt-2 text-xs h-7 bg-red-700 text-white" onClick={() => { openQuickAction(p, 'Stock In'); setNotifOpen(false) }}>Restock Now</Button>
+                  <div key={p.id} className="p-3 rounded-lg bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-900/60 text-xs">
+                    <p className="font-bold text-rose-900 dark:text-rose-300 flex items-center gap-1.5"><AlertCircle className="size-3.5 text-rose-600" /> Out of Stock Emergency</p>
+                    <p className="text-slate-700 dark:text-slate-300 mt-1"><b>{p.name}</b> (`{p.sku}`) has reached 0 units.</p>
+                    <Button size="sm" className="mt-2 text-xs h-7 bg-rose-700 text-white cursor-pointer" onClick={() => { openQuickAction(p, 'Stock In'); setNotifOpen(false) }}>Restock Now</Button>
                   </div>
                 ))}
 
                 {low.map((p) => (
-                  <div key={p.id} className="p-3 rounded-lg bg-amber-50 border border-amber-200 text-xs">
-                    <p className="font-bold text-amber-900 flex items-center gap-1.5"><AlertTriangle className="size-3.5 text-amber-600" /> Low Stock Warning</p>
-                    <p className="text-slate-700 mt-1"><b>{p.name}</b> is at {p.qty} units (Min: {p.min}).</p>
+                  <div key={p.id} className="p-3 rounded-lg bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-900/60 text-xs">
+                    <p className="font-bold text-amber-900 dark:text-amber-300 flex items-center gap-1.5"><AlertTriangle className="size-3.5 text-amber-600" /> Low Stock Warning</p>
+                    <p className="text-slate-700 dark:text-slate-300 mt-1"><b>{p.name}</b> is at {p.qty} units (Min: {p.min}).</p>
                   </div>
                 ))}
               </div>
 
-              <Button variant="outline" className="w-full mt-4" onClick={() => { setUnreadCount(0); setNotifOpen(false); say('All notifications cleared') }}>
+              <Button variant="outline" className="w-full mt-4 cursor-pointer" onClick={() => { setUnreadCount(0); setNotifOpen(false); say('All notifications cleared') }}>
                 Mark All as Read
               </Button>
             </div>
@@ -1429,51 +1461,51 @@ export default function Page() {
         {/* 3. Interactive Product Detail Drawer */}
         {drawerProd && (
           <div className="fixed inset-0 z-50 flex justify-end bg-slate-950/40 backdrop-blur-xs animate-in fade-in" onClick={() => setDrawerProd(null)}>
-            <div className="w-full max-w-md h-full bg-white shadow-2xl p-6 border-l border-slate-200 overflow-y-auto flex flex-col justify-between" onClick={(e) => e.stopPropagation()}>
+            <div className="w-full max-w-md h-full bg-white dark:bg-slate-900 shadow-2xl p-6 border-l border-slate-200 dark:border-slate-800 overflow-y-auto flex flex-col justify-between" onClick={(e) => e.stopPropagation()}>
               <div>
-                <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
+                <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3 mb-4">
                   <div className="flex items-center gap-2">
                     <Package className="size-5 text-emerald-600" />
-                    <h3 className="font-bold text-slate-900 text-base">Product Insights</h3>
+                    <h3 className="font-bold text-slate-900 dark:text-white text-base">Product Insights</h3>
                   </div>
-                  <button onClick={() => setDrawerProd(null)}><X className="size-4 text-slate-400" /></button>
+                  <button onClick={() => setDrawerProd(null)} className="cursor-pointer"><X className="size-4 text-slate-400 hover:text-slate-200" /></button>
                 </div>
 
                 <div className="mb-4">
                   <div className="flex items-center justify-between">
-                    <h2 className="text-lg font-bold text-slate-900">{drawerProd.name}</h2>
+                    <h2 className="text-lg font-bold text-slate-900 dark:text-white">{drawerProd.name}</h2>
                     <Sb s={status(drawerProd)} />
                   </div>
-                  <p className="font-mono text-xs text-slate-500">{drawerProd.sku}</p>
+                  <p className="font-mono text-xs text-slate-500 dark:text-slate-400">{drawerProd.sku}</p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-3 mb-4">
-                  <div className="p-3 rounded-lg bg-slate-50 border border-slate-200">
-                    <span className="text-[11px] font-semibold text-slate-500">Current Stock</span>
-                    <p className="text-xl font-bold text-slate-900 mt-0.5">{drawerProd.qty} units</p>
+                  <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60">
+                    <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">Current Stock</span>
+                    <p className="text-xl font-bold text-slate-900 dark:text-white mt-0.5">{drawerProd.qty} units</p>
                   </div>
-                  <div className="p-3 rounded-lg bg-slate-50 border border-slate-200">
-                    <span className="text-[11px] font-semibold text-slate-500">Asset Valuation</span>
-                    <p className="text-xl font-bold text-emerald-800 mt-0.5">${(drawerProd.qty * drawerProd.price).toFixed(2)}</p>
+                  <div className="p-3 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/60">
+                    <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">Asset Valuation</span>
+                    <p className="text-xl font-bold text-emerald-800 dark:text-emerald-400 mt-0.5">${(drawerProd.qty * drawerProd.price).toFixed(2)}</p>
                   </div>
                 </div>
 
                 <div className="space-y-2 text-xs mb-4">
-                  <div className="flex justify-between py-1.5 border-b border-slate-100"><span className="text-slate-500">Category:</span> <b className="text-slate-900">{drawerProd.cat}</b></div>
-                  <div className="flex justify-between py-1.5 border-b border-slate-100"><span className="text-slate-500">Unit Price:</span> <b className="text-slate-900">${drawerProd.price.toFixed(2)}</b></div>
-                  <div className="flex justify-between py-1.5 border-b border-slate-100"><span className="text-slate-500">Min Reorder Threshold:</span> <b className="text-slate-900">{drawerProd.min} units</b></div>
-                  <div className="flex justify-between py-1.5 border-b border-slate-100"><span className="text-slate-500">Supplier Contact:</span> <b className="text-slate-900">{supName(drawerProd.sup)}</b></div>
+                  <div className="flex justify-between py-1.5 border-b border-slate-100 dark:border-slate-800"><span className="text-slate-500 dark:text-slate-400">Category:</span> <b className="text-slate-900 dark:text-white">{drawerProd.cat}</b></div>
+                  <div className="flex justify-between py-1.5 border-b border-slate-100 dark:border-slate-800"><span className="text-slate-500 dark:text-slate-400">Unit Price:</span> <b className="text-slate-900 dark:text-white">${drawerProd.price.toFixed(2)}</b></div>
+                  <div className="flex justify-between py-1.5 border-b border-slate-100 dark:border-slate-800"><span className="text-slate-500 dark:text-slate-400">Min Reorder Threshold:</span> <b className="text-slate-900 dark:text-white">{drawerProd.min} units</b></div>
+                  <div className="flex justify-between py-1.5 border-b border-slate-100 dark:border-slate-800"><span className="text-slate-500 dark:text-slate-400">Supplier Contact:</span> <b className="text-slate-900 dark:text-white">{supName(drawerProd.sup)}</b></div>
                 </div>
 
-                <div className="rounded-lg bg-slate-50 p-3 border border-slate-200 text-xs mb-4">
-                  <p className="font-bold text-slate-800 mb-1">Description:</p>
-                  <p className="text-slate-600">{drawerProd.desc || 'No additional description provided.'}</p>
+                <div className="rounded-lg bg-slate-50 dark:bg-slate-800/60 p-3 border border-slate-200 dark:border-slate-700/60 text-xs mb-4">
+                  <p className="font-bold text-slate-800 dark:text-slate-200 mb-1">Description:</p>
+                  <p className="text-slate-600 dark:text-slate-300">{drawerProd.desc || 'No additional description provided.'}</p>
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-slate-100 grid grid-cols-2 gap-2">
-                <Button variant="outline" className="bg-emerald-50 text-emerald-900 border-emerald-300" onClick={() => { openQuickAction(drawerProd, 'Stock In'); setDrawerProd(null) }}>+ Stock In</Button>
-                <Button variant="outline" className="bg-rose-50 text-rose-900 border-rose-300" onClick={() => { openQuickAction(drawerProd, 'Stock Out'); setDrawerProd(null) }}>- Stock Out</Button>
+              <div className="pt-4 border-t border-slate-100 dark:border-slate-800 grid grid-cols-2 gap-2">
+                <Button variant="outline" className="bg-emerald-50 dark:bg-emerald-500/10 text-emerald-900 dark:text-emerald-300 border-emerald-300 dark:border-emerald-500/30 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 cursor-pointer" onClick={() => { openQuickAction(drawerProd, 'Stock In'); setDrawerProd(null) }}>+ Stock In</Button>
+                <Button variant="outline" className="bg-rose-50 dark:bg-rose-500/10 text-rose-900 dark:text-rose-300 border-rose-300 dark:border-rose-500/30 hover:bg-rose-100 dark:hover:bg-rose-500/20 cursor-pointer" onClick={() => { openQuickAction(drawerProd, 'Stock Out'); setDrawerProd(null) }}>- Stock Out</Button>
               </div>
             </div>
           </div>
@@ -1487,16 +1519,16 @@ export default function Page() {
         {quickOp.open && quickOp.prod && (
           <Modal title={`${quickOp.type}: ${quickOp.prod.name} (${quickOp.prod.sku})`} onClose={() => setQuickOp({ ...quickOp, open: false })}>
             <div className="grid gap-3">
-              <div className="rounded-lg bg-slate-50 p-3 border border-slate-200 text-xs flex justify-between">
-                <span>Current Stock: <b className="text-slate-900">{quickOp.prod.qty} units</b></span>
-                <span>Min Threshold: <b className="text-slate-900">{quickOp.prod.min} units</b></span>
+              <div className="rounded-lg bg-slate-50 dark:bg-slate-800/60 p-3 border border-slate-200 dark:border-slate-700/60 text-xs flex justify-between">
+                <span>Current Stock: <b className="text-slate-900 dark:text-white">{quickOp.prod.qty} units</b></span>
+                <span>Min Threshold: <b className="text-slate-900 dark:text-white">{quickOp.prod.min} units</b></span>
               </div>
 
               {quickOp.type === 'Adjustment' ? (
                 <Field label="New Physical Count Quantity">
                   <input type="number" min={0} className={inp} value={quickOp.qty || ''} onChange={(e) => setQuickOp({ ...quickOp, qty: e.target.value })} autoFocus />
                   {quickOp.qty !== '' && (
-                    <p className="text-xs text-slate-600 mt-1">
+                    <p className="text-xs text-slate-600 dark:text-slate-300 mt-1">
                       Variance: <b>{Number(quickOp.qty) - quickOp.prod.qty >= 0 ? '+' : ''}{Number(quickOp.qty) - quickOp.prod.qty} units</b> (${Math.abs((Number(quickOp.qty) - quickOp.prod.qty) * quickOp.prod.price).toFixed(2)})
                     </p>
                   )}
@@ -1505,7 +1537,7 @@ export default function Page() {
                 <Field label={quickOp.type === 'Stock In' ? 'Quantity to Add (Receiving)' : 'Quantity to Deduct (Fulfillment)'}>
                   <input type="number" min={1} className={inp} value={quickOp.qty || ''} onChange={(e) => setQuickOp({ ...quickOp, qty: e.target.value })} autoFocus />
                   {quickOp.type === 'Stock Out' && Number(quickOp.qty) > quickOp.prod.qty && (
-                    <p className="text-xs font-semibold text-red-600 mt-1 flex items-center gap-1"><AlertTriangle className="size-3.5" /> Exceeds available stock ({quickOp.prod.qty} available)</p>
+                    <p className="text-xs font-semibold text-rose-600 dark:text-rose-400 mt-1 flex items-center gap-1"><AlertTriangle className="size-3.5" /> Exceeds available stock ({quickOp.prod.qty} available)</p>
                   )}
                 </Field>
               )}
@@ -1530,7 +1562,7 @@ export default function Page() {
                   record(quickOp.type, quickOp.prod.id, Number(quickOp.qty), quickOp.ref || quickOp.reason || 'Log', quickOp.note || '')
                   setQuickOp({ ...quickOp, open: false })
                 }}
-                className="mt-2"
+                className="mt-2 cursor-pointer"
               >
                 Confirm {quickOp.type}
               </Button>
@@ -1546,8 +1578,8 @@ export default function Page() {
                 <input className={inp} value={bulkRef} onChange={(e) => setBulkRef(e.target.value)} placeholder="PO-9001" />
               </Field>
 
-              <div className="border border-slate-200 rounded-lg p-3 bg-slate-50 space-y-2">
-                <p className="text-xs font-semibold text-slate-700">Received Line Items:</p>
+              <div className="border border-slate-200 dark:border-slate-700/60 rounded-lg p-3 bg-slate-50 dark:bg-slate-800/60 space-y-2">
+                <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">Received Line Items:</p>
                 {bulkItems.map((item, idx) => (
                   <div key={idx} className="flex items-center gap-2">
                     <select
@@ -1572,18 +1604,18 @@ export default function Page() {
                       placeholder="Qty"
                     />
                     {bulkItems.length > 1 && (
-                      <button onClick={() => setBulkItems(bulkItems.filter((_, i) => i !== idx))} className="text-red-600 hover:text-red-800 p-1">
+                      <button onClick={() => setBulkItems(bulkItems.filter((_, i) => i !== idx))} className="text-red-600 hover:text-red-800 p-1 cursor-pointer">
                         <X className="size-4" />
                       </button>
                     )}
                   </div>
                 ))}
-                <Button size="sm" variant="outline" onClick={() => setBulkItems([...bulkItems, { pid: prods[0]?.id || 1, qty: '10' }])}>+ Add Line Item</Button>
+                <Button size="sm" variant="outline" className="cursor-pointer" onClick={() => setBulkItems([...bulkItems, { pid: prods[0]?.id || 1, qty: '10' }])}>+ Add Line Item</Button>
               </div>
 
               <div className="flex justify-end gap-2 pt-2">
-                <Button variant="outline" size="sm" onClick={() => setBulkModal(false)}>Cancel</Button>
-                <Button size="sm" onClick={submitBulkReceive}>Receive All Line Items</Button>
+                <Button variant="outline" size="sm" className="cursor-pointer" onClick={() => setBulkModal(false)}>Cancel</Button>
+                <Button size="sm" className="cursor-pointer" onClick={submitBulkReceive}>Receive All Line Items</Button>
               </div>
             </div>
           </Modal>
@@ -1593,18 +1625,18 @@ export default function Page() {
         {deleteConfirm && (
           <Modal title={`Delete "${deleteConfirm.name}"?`} onClose={() => setDeleteConfirm(null)}>
             <div className="grid gap-3">
-              <p className="text-xs text-slate-600">
-                Are you sure you want to delete <b className="text-slate-900">{deleteConfirm.name} ({deleteConfirm.sku})</b> from the inventory database?
+              <p className="text-xs text-slate-600 dark:text-slate-300">
+                Are you sure you want to delete <b className="text-slate-900 dark:text-white">{deleteConfirm.name} ({deleteConfirm.sku})</b> from the inventory database?
               </p>
               {deleteConfirm.qty > 0 && (
-                <div className="rounded-lg bg-amber-50 p-3 border border-amber-300 text-xs text-amber-950 font-medium flex items-center gap-2">
-                  <AlertTriangle className="size-4 text-amber-700 shrink-0" />
+                <div className="rounded-lg bg-amber-50 dark:bg-amber-950/40 p-3 border border-amber-300 dark:border-amber-800/60 text-xs text-amber-950 dark:text-amber-200 font-medium flex items-center gap-2">
+                  <AlertTriangle className="size-4 text-amber-700 dark:text-amber-400 shrink-0" />
                   Warning: This item currently has <b>{deleteConfirm.qty} units</b> in stock.
                 </div>
               )}
               <div className="flex gap-2 justify-end pt-2">
-                <Button variant="outline" size="sm" onClick={() => setDeleteConfirm(null)}>Cancel</Button>
-                <Button size="sm" className="bg-red-700 hover:bg-red-800 text-white" onClick={() => deleteProduct(deleteConfirm)}>Delete Product</Button>
+                <Button variant="outline" size="sm" className="cursor-pointer" onClick={() => setDeleteConfirm(null)}>Cancel</Button>
+                <Button size="sm" className="bg-red-700 hover:bg-red-800 text-white cursor-pointer" onClick={() => deleteProduct(deleteConfirm)}>Delete Product</Button>
               </div>
             </div>
           </Modal>
