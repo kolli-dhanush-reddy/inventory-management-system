@@ -508,8 +508,8 @@ export default function Page() {
     )
   }
 
-  const Kpi = ({ t, v, i: I, c = '', bg = 'bg-white', trendStr }: A) => (
-    <Card className={`${bg} transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md border-slate-200`}>
+  const Kpi = ({ t, v, i: I, c = '', bg = 'bg-white dark:bg-zinc-900', trendStr }: A) => (
+    <Card className={`${bg} border border-slate-200/80 rounded-xl shadow-[0_2px_8px_-3px_rgba(0,0,0,0.05)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md`}>
       <CardContent className="p-4">
         <div className="flex items-center justify-between">
           <p className="text-xs font-semibold text-slate-500">{t}</p>
@@ -525,9 +525,9 @@ export default function Page() {
 
   const TH = ({ cols }: { cols: string[] }) => (
     <TableHeader>
-      <TableRow className="bg-slate-50/80 hover:bg-slate-50/80">
+      <TableRow className="bg-slate-50/80 hover:bg-slate-50/80 border-b border-slate-200/80">
         {cols.map((c) => (
-          <TableHead key={c} className="font-bold text-slate-800 text-xs">
+          <TableHead key={c} className="font-semibold text-slate-700 text-xs py-3">
             {c}
           </TableHead>
         ))}
@@ -557,7 +557,7 @@ export default function Page() {
   )
 
   return (
-    <div className="flex min-h-screen flex-col bg-slate-50 text-slate-900 font-sans">
+    <div className="flex min-h-screen flex-col bg-slate-50/60 text-slate-900 font-sans">
       {/* Demo Sandbox Top Header */}
       <header className="bg-slate-900 px-4 py-2 text-white text-xs flex flex-wrap items-center justify-between gap-2 border-b border-slate-800">
         <div className="flex items-center gap-2">
@@ -613,7 +613,7 @@ export default function Page() {
 
       <div className="flex flex-1">
         {/* Sidebar Navigation */}
-        <aside className="hidden w-60 shrink-0 flex-col border-r border-slate-200 bg-white md:flex">
+        <aside className="hidden w-60 shrink-0 flex-col border-r border-slate-200/80 bg-white md:flex">
           <div className="flex items-center gap-2 px-5 py-4 text-lg font-bold border-b border-slate-100">
             <div className="flex size-7 items-center justify-center rounded-lg bg-emerald-600 text-white shadow-xs">
               <Boxes className="size-4" />
@@ -633,7 +633,7 @@ export default function Page() {
               </button>
             ))}
           </nav>
-          <div className="mt-auto border-t border-slate-200 p-4 bg-slate-50/50">
+          <div className="mt-auto border-t border-slate-200/80 p-4 bg-slate-50/50">
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-bold text-slate-900 text-xs">{admin ? 'Dana Whitfield' : 'Raj Patel'}</p>
@@ -645,9 +645,9 @@ export default function Page() {
         </aside>
 
         {/* Main Content Area */}
-        <main className="min-w-0 flex-1 p-4 md:p-6">
+        <main className="min-w-0 flex-1 p-4 md:p-6 bg-slate-50/60">
           {/* Mobile Touch Navigation */}
-          <div className="mb-4 border-b border-slate-200 pb-3 md:hidden">
+          <div className="mb-4 border-b border-slate-200/80 pb-3 md:hidden">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2 text-base font-bold"><Boxes className="size-5 text-emerald-600" />Stockly</div>
               <Badge variant="outline" className="text-[10px]">{admin ? 'Admin' : 'Staff'}</Badge>
@@ -685,13 +685,13 @@ export default function Page() {
               <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">
                 <Kpi t="Total Products" v={prods.length} i={Package} trendStr="+2 this week" />
                 <Kpi t="Total Stock Items" v={items.toLocaleString()} i={Boxes} trendStr="+140 incoming" />
-                <Kpi t="Low Stock Warnings" v={low.length} i={AlertTriangle} c="text-amber-700" bg={low.length > 0 ? 'bg-amber-50/50 border-amber-200' : 'bg-white'} />
-                <Kpi t="Out of Stock Emergencies" v={out.length} i={AlertCircle} c="text-red-700" bg={out.length > 0 ? 'bg-red-50/50 border-red-200' : 'bg-white'} />
+                <Kpi t="Low Stock Warnings" v={low.length} i={AlertTriangle} c="text-amber-700" bg={low.length > 0 ? 'bg-amber-50/40 border border-amber-200/80 rounded-xl shadow-[0_2px_8px_-3px_rgba(0,0,0,0.05)]' : 'bg-white dark:bg-zinc-900 border border-slate-200/80 rounded-xl shadow-[0_2px_8px_-3px_rgba(0,0,0,0.05)]'} />
+                <Kpi t="Out of Stock Emergencies" v={out.length} i={AlertCircle} c="text-red-700" bg={out.length > 0 ? 'bg-red-50/40 border border-red-200/60 rounded-xl shadow-[0_2px_8px_-3px_rgba(0,0,0,0.05)]' : 'bg-white dark:bg-zinc-900 border border-slate-200/80 rounded-xl shadow-[0_2px_8px_-3px_rgba(0,0,0,0.05)]'} />
                 <Kpi t="Total Inventory Value" v={$(value)} i={DollarSign} trendStr="+4.2% capital valuation" />
               </div>
 
               {/* Quick Movement Actions */}
-              <Card className="border-slate-200 bg-white shadow-xs">
+              <Card className="border border-slate-200/80 bg-white dark:bg-zinc-900 rounded-xl shadow-[0_2px_8px_-3px_rgba(0,0,0,0.05)]">
                 <CardContent className="flex flex-wrap items-center justify-between gap-3 p-4">
                   <div className="flex items-center gap-2">
                     <SlidersHorizontal className="size-4 text-slate-500" />
@@ -709,14 +709,14 @@ export default function Page() {
 
               {/* Emergency Out-of-Stock Alert Banner */}
               {out.length > 0 && (
-                <Card className="border-red-300 bg-red-50/60 shadow-xs animate-in fade-in">
-                  <CardHeader className="pb-2"><CardTitle className="text-sm font-bold text-red-900 flex items-center gap-2"><AlertCircle className="size-4 text-red-600 animate-pulse" />CRITICAL: Out of Stock Emergencies ({out.length} items)</CardTitle></CardHeader>
+                <Card className="border border-red-200/60 bg-red-50/40 rounded-xl shadow-[0_2px_8px_-3px_rgba(0,0,0,0.05)] animate-in fade-in">
+                  <CardHeader className="pb-2"><CardTitle className="text-sm font-bold text-red-700 flex items-center gap-2"><AlertCircle className="size-4 text-red-600 animate-pulse" />CRITICAL: Out of Stock Emergencies ({out.length} items)</CardTitle></CardHeader>
                   <CardContent className="overflow-x-auto p-4 pt-0">
                     <Table><TH cols={['Product', 'SKU', 'Category', 'Min Threshold', 'Action']} />
-                      <TableBody>
+                      <TableBody className="divide-y divide-slate-100">
                         {out.map((p) => (
-                          <TableRow key={p.id} className="bg-white/90 hover:bg-white transition-colors">
-                            <TableCell className="font-bold text-red-950">{p.name}</TableCell>
+                          <TableRow key={p.id} className="bg-white/80 hover:bg-white transition-colors">
+                            <TableCell className="font-bold text-red-700">{p.name}</TableCell>
                             <TableCell className="font-mono text-xs text-slate-600">{p.sku}</TableCell>
                             <TableCell>{p.cat}</TableCell>
                             <TableCell>{p.min} units</TableCell>
@@ -731,18 +731,18 @@ export default function Page() {
 
               {/* Visual Charts */}
               <div className="grid gap-4 lg:grid-cols-2">
-                <Card className="border-slate-200"><CardHeader><CardTitle className="text-sm font-bold text-slate-900">Stock Level by Category (Units)</CardTitle></CardHeader><CardContent className="h-64"><ResponsiveContainer><BarChart data={byCat}><CartesianGrid strokeDasharray="3 3" vertical={false} /><XAxis dataKey="name" fontSize={12} /><YAxis fontSize={12} /><Tooltip /><Bar dataKey="stock" fill="#0f172a" radius={[4, 4, 0, 0]} /></BarChart></ResponsiveContainer></CardContent></Card>
-                <Card className="border-slate-200"><CardHeader><CardTitle className="text-sm font-bold text-slate-900">Transactions Trend (Units, Last 7 Days)</CardTitle></CardHeader><CardContent className="h-64"><ResponsiveContainer><LineChart data={trend}><CartesianGrid strokeDasharray="3 3" vertical={false} /><XAxis dataKey="day" fontSize={12} /><YAxis fontSize={12} /><Tooltip /><Line dataKey="In" stroke="#059669" strokeWidth={2.5} name="Stock In" /><Line dataKey="Out" stroke="#e11d48" strokeWidth={2.5} name="Stock Out" /></LineChart></ResponsiveContainer></CardContent></Card>
+                <Card className="border border-slate-200/80 bg-white dark:bg-zinc-900 rounded-xl shadow-[0_2px_8px_-3px_rgba(0,0,0,0.05)]"><CardHeader><CardTitle className="text-sm font-bold text-slate-900">Stock Level by Category (Units)</CardTitle></CardHeader><CardContent className="h-64"><ResponsiveContainer><BarChart data={byCat}><CartesianGrid strokeDasharray="3 3" vertical={false} /><XAxis dataKey="name" fontSize={12} /><YAxis fontSize={12} /><Tooltip /><Bar dataKey="stock" fill="#0f172a" radius={[4, 4, 0, 0]} /></BarChart></ResponsiveContainer></CardContent></Card>
+                <Card className="border border-slate-200/80 bg-white dark:bg-zinc-900 rounded-xl shadow-[0_2px_8px_-3px_rgba(0,0,0,0.05)]"><CardHeader><CardTitle className="text-sm font-bold text-slate-900">Transactions Trend (Units, Last 7 Days)</CardTitle></CardHeader><CardContent className="h-64"><ResponsiveContainer><LineChart data={trend}><CartesianGrid strokeDasharray="3 3" vertical={false} /><XAxis dataKey="day" fontSize={12} /><YAxis fontSize={12} /><Tooltip /><Line dataKey="In" stroke="#059669" strokeWidth={2.5} name="Stock In" /><Line dataKey="Out" stroke="#e11d48" strokeWidth={2.5} name="Stock Out" /></LineChart></ResponsiveContainer></CardContent></Card>
               </div>
 
               {/* Tables: Low Stock & Recent Transactions */}
               <div className="grid gap-4 lg:grid-cols-2">
-                <Card className="border-slate-200">
+                <Card className="border border-slate-200/80 bg-white dark:bg-zinc-900 rounded-xl shadow-[0_2px_8px_-3px_rgba(0,0,0,0.05)]">
                   <CardHeader><CardTitle className="text-sm font-bold flex items-center justify-between text-slate-900">Low Stock Reorder Warnings <Badge variant="outline" className="bg-amber-100 text-amber-900 border-amber-300 font-semibold">{low.length} Items</Badge></CardTitle></CardHeader>
                   <CardContent className="overflow-x-auto">
                     {low.length === 0 ? <p className="p-4 text-xs text-slate-500">All products have sufficient stock levels.</p> : (
                       <Table><TH cols={['Product', 'Min', 'Current', 'Suggested Order', 'Action']} />
-                        <TableBody>
+                        <TableBody className="divide-y divide-slate-100">
                           {low.map((p) => (
                             <TableRow key={p.id}>
                               <TableCell className="font-medium text-slate-900">{p.name}</TableCell>
@@ -758,9 +758,9 @@ export default function Page() {
                   </CardContent>
                 </Card>
 
-                <Card className="border-slate-200">
+                <Card className="border border-slate-200/80 bg-white dark:bg-zinc-900 rounded-xl shadow-[0_2px_8px_-3px_rgba(0,0,0,0.05)]">
                   <CardHeader><CardTitle className="text-sm font-bold text-slate-900">Recent Transactions Feed</CardTitle></CardHeader>
-                  <CardContent className="overflow-x-auto"><Table><TH cols={['Date', 'Type', 'Product', 'Qty', 'Ref / Note', 'By']} /><TableBody>{txns.slice(0, 7).map(TxRow)}</TableBody></Table></CardContent>
+                  <CardContent className="overflow-x-auto"><Table><TH cols={['Date', 'Type', 'Product', 'Qty', 'Ref / Note', 'By']} /><TableBody className="divide-y divide-slate-100">{txns.slice(0, 7).map(TxRow)}</TableBody></Table></CardContent>
                 </Card>
               </div>
             </div>
